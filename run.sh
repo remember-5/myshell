@@ -16,7 +16,7 @@ systemctl disable firewalld.service
 
 # 3. 安装插件
 echo "安装插件"
-yum install net-tools lrzsz vim wget unzip -y
+yum install net-tools lrzsz vim wget unzip tree -y
 
 # 4. 安装docker
 echo "安装docker"
@@ -57,19 +57,29 @@ systemctl restart docker
 # 安装docker-compose
 
 # 5. 安装nginx
+# 安装插件
 yum -y install make gcc gcc-c++ zlib zlib-devel libtool automake openssl openssl-devel pcre pcre-devel
 wget https://nginx.org/download/nginx-1.20.1.tar.gz
 tar zxvf nginx-1.20.1.tar.gz
-./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/server/pcre-8.35 --with-stream
+nginx-1.20.1/configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module  --with-stream
 make && make install
+# 查看nginx版本
+/usr/local/webserver/nginx/sbin/nginx -v
+
 
 # 6. 安装jdk
-
-
-
-
+# 使用阿里jdk
+wget https://dragonwell.oss-cn-shanghai.aliyuncs.com/8/8.4.4-GA/Alibaba_Dragonwell_8.4.4-GA_Linux_x64.tar.gz
+tar zxvf Alibaba_Dragonwell_8.4.4-GA_Linux_x64.tar.gz
+# TODO 配置环境变量
 
 # 7. 安装nodejs
+
+wget https://nodejs.org/dist/v14.17.5/node-v14.17.5-linux-x64.tar.xz
+tar zxvf node-v14.17.5-linux-x64.tar.xz
+npm config set registry https://registry.npm.taobao.org
+npm i yarn -g
+# TODO 配置环境变量
 
 # 8. gitlab-runner
 # 因为需要更新git
@@ -79,9 +89,23 @@ yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-r
 yum install -y git
 # 更新git
 yum update git
+# 下载gitlab-runner
+wget https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+cp gitlab-runner-linux-amd64 /usr/local/bin/gitlab-runner
+chmod +x /usr/local/bin/gitlab-runner
+gitlab-runner install -n "gitlab-runner" -u root
+gitlab-runner start
 
 # 9.安装mysql
 ./mysql/docker-compose up -d 
 # 10.安装redis
-
+./redis/docker-compose up -d
 # 11. 安装rabbitmq
+./rabbitmq/docker-compose up -d
+
+
+
+# 安装maven
+wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
+tar zxvf apache-maven-3.8.2-bin.tar.gz
+# TODO 配置环境变量
