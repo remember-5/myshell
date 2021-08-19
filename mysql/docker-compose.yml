@@ -2,17 +2,16 @@ version: '3'
 services:
   mysql:
     restart: always
-    image: mysql:8.20.0
+    image: mysql:8.0.20
     container_name: MYSQL8
-    volumes:
-      - ./mydir:/mydir
-      - ./datadir:/var/lib/mysql
-      - ./conf/my.cnf:/etc/my.cnf
-      # 数据库还原目录 可将需要还原的sql文件放在这里
-      - /docker/mysql/source:/docker-entrypoint-initdb.d
-    environment:
-      - "MYSQL_ROOT_PASSWORD=123456"
-      - "MYSQL_DATABASE=mydb"
-      - "TZ=Asia/Shanghai"
     ports:
       - 3306:3306
+    environment:
+#      - MYSQL_USER: user # 创建新用户
+      - "MYSQL_ROOT_PASSWORD=123456"
+#      - "MYSQL_DATABASE=mydb" # 创建新的库
+      - "TZ=Asia/Shanghai"
+    volumes:
+      - /data/mysql/data:/var/lib/mysql
+      - /data/mysql/conf:/etc/mysql/conf.d
+      - ~/data/mysql/logs:/logs
