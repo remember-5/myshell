@@ -60,7 +60,7 @@ systemctl start docker
 touch /etc/docker/daemon.json
 > /etc/docker/daemon.json
 # TODO 这个位置要修改
-echo "{\"registry-mirrors\": [\"https://fgb5kwgr.mirror.aliyuncs.com\"]}" >> /etc/docker/daemon.json
+echo "{\"registry-mirrors\": [\"https://hub-mirror.c.163.com\",\"https://docker.mirrors.ustc.edu.cn\"]}" >> /etc/docker/daemon.json
 systemctl daemon-reload
 systemctl restart docker
 
@@ -94,6 +94,13 @@ wget https://dragonwell.oss-cn-shanghai.aliyuncs.com/8/8.4.4-GA/Alibaba_Dragonwe
 tar zxvf Alibaba_Dragonwell_8.4.4-GA_Linux_x64.tar.gz
 # TODO 配置环境变量
 # ------------------------------------
+
+## 创建profile.d下的文件
+#touch /ect/profile.d/
+cp .env/jdk.sh /etc/profile.d
+source /etc/profile
+java -version
+
 
 # 安装maven
 wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
