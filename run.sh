@@ -87,14 +87,11 @@ make && make install
 # ------------------------------------
 
 # 安装jdk
-# 使用阿里jdk
-wget https://dragonwell.oss-cn-shanghai.aliyuncs.com/8/8.4.4-GA/Alibaba_Dragonwell_8.4.4-GA_Linux_x64.tar.gz
-tar zxvf Alibaba_Dragonwell_8.4.4-GA_Linux_x64.tar.gz
-# TODO 配置环境变量
-# ------------------------------------
+wget https://mirrors.huaweicloud.com/java/jdk/8u202-b08/jdk-8u202-linux-x64.tar.gz
+tar zxvf jdk-8u202-linux-x64.tar.gz
+cp jdk1.8.0_202 /usr/local
 
 ## 创建profile.d下的文件
-#touch /ect/profile.d/
 cp .env/jdk.sh /etc/profile.d
 source /etc/profile
 java -version
