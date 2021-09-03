@@ -6,7 +6,6 @@
 MY_PATH=$(pwd)
 echo "$MY_PATH"
 
-
 # 更换yum
 echo "更换yum"
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
@@ -32,13 +31,13 @@ echo "安装docker"
 
 # 卸载原有docker
 yum remove docker \
-    docker-client \
-    docker-client-latest \
-    docker-common \
-    docker-latest \
-    docker-latest-logrotate \
-    docker-logrotate \
-    docker-engine
+  docker-client \
+  docker-client-latest \
+  docker-common \
+  docker-latest \
+  docker-latest-logrotate \
+  docker-logrotate \
+  docker-engine
 
 # 安装docker插件
 yum install -y yum-utils \
@@ -47,8 +46,8 @@ yum install -y yum-utils \
 
 # 设置docker仓库
 yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
+  --add-repo \
+  https://download.docker.com/linux/centos/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
 yum install -y docker-ce-20.10.6 docker-ce-cli-20.10.6 containerd.io
@@ -58,9 +57,8 @@ systemctl start docker
 
 # 配置文件
 touch /etc/docker/daemon.json
-> /etc/docker/daemon.json
-# TODO 这个位置要修改
-echo "{\"registry-mirrors\": [\"https://hub-mirror.c.163.com\",\"https://docker.mirrors.ustc.edu.cn\"]}" >> /etc/docker/daemon.json
+>/etc/docker/daemon.json
+echo "{\"registry-mirrors\": [\"https://hub-mirror.c.163.com\",\"https://docker.mirrors.ustc.edu.cn\"]}" >>/etc/docker/daemon.json
 systemctl daemon-reload
 systemctl restart docker
 
@@ -82,7 +80,7 @@ yum -y install make gcc gcc-c++ zlib zlib-devel libtool automake openssl openssl
 wget https://nginx.org/download/nginx-1.20.1.tar.gz
 tar zxvf nginx-1.20.1.tar.gz
 cd nginx-1.20.1
-./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module  --with-stream
+./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-stream
 make && make install
 # 查看nginx版本
 /usr/local/nginx/sbin/nginx -v
@@ -101,21 +99,26 @@ cp .env/jdk.sh /etc/profile.d
 source /etc/profile
 java -version
 
-
 # 安装maven
 wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
 tar zxvf apache-maven-3.8.2-bin.tar.gz
-# TODO 配置环境变量
-
+cp apache-maven-3.8.2 /usr/local
+cp .env/maven.sh /etc/profile.d
+source /etc/profile
+mvn -v
 # ------------------------------------
 
 # 安装nodejs
 
 wget https://nodejs.org/dist/v14.17.5/node-v14.17.5-linux-x64.tar.xz
-tar zxvf node-v14.17.5-linux-x64.tar.xz
+tar xvf node-v14.17.5-linux-x64.tar.xz
+cp node-v14.17.5-linux-x64 /usr/local
+cp .env/nodejs.sh /etc/profile.d
+source /etc/profile
+node -v
+
 npm config set registry https://registry.npm.taobao.org
 npm i yarn -g
-# TODO 配置环境变量
 
 # ------------------------------------
 
