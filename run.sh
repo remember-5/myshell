@@ -89,7 +89,7 @@ make && make install
 # 安装jdk
 wget https://mirrors.huaweicloud.com/java/jdk/8u202-b08/jdk-8u202-linux-x64.tar.gz
 tar zxvf jdk-8u202-linux-x64.tar.gz
-cp jdk1.8.0_202 /usr/local
+mv jdk1.8.0_202 /usr/local
 
 ## 创建profile.d下的文件
 cp .env/jdk.sh /etc/profile.d
@@ -99,7 +99,7 @@ java -version
 # 安装maven
 wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
 tar zxvf apache-maven-3.8.2-bin.tar.gz
-cp apache-maven-3.8.2 /usr/local
+mv apache-maven-3.8.2 /usr/local
 cp .env/maven.sh /etc/profile.d
 source /etc/profile
 mvn -v
@@ -109,7 +109,7 @@ mvn -v
 
 wget https://nodejs.org/dist/v14.17.5/node-v14.17.5-linux-x64.tar.xz
 tar xvf node-v14.17.5-linux-x64.tar.xz
-cp node-v14.17.5-linux-x64 /usr/local
+mv node-v14.17.5-linux-x64 /usr/local
 cp .env/nodejs.sh /etc/profile.d
 source /etc/profile
 node -v
