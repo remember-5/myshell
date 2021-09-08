@@ -45,9 +45,9 @@ yum install -y yum-utils \
   lvm2
 
 # 设置docker仓库
-yum-config-manager \
-  --add-repo \
-  https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
 yum install -y docker-ce-20.10.6 docker-ce-cli-20.10.6 containerd.io
