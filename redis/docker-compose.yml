@@ -6,9 +6,8 @@ services:
     container_name: redis
     ports:
       - 6379:6379
-    command:
-      ["redis-server", "--requirepass", "12345678", "--appendonly", "yes"]
+    command: ["redis-server", "/etc/redis/redis.conf"]
     volumes:
       - /data/redis/data:/data
-#      - /data/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf # 配置文件，暂时不需要
+      - /data/redis/conf/redis.conf:/etc/redis/redis.conf # 配置文件，暂时不需要
       - /data/redis/logs:/logs
