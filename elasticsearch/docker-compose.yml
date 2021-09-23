@@ -1,0 +1,24 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:6.8.6
+    container_name: es
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./data:/usr/share/elasticsearch/data
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./plugins:/usr/share/elasticsearch/plugins
+    environment:
+      - TZ=Asia/Shanghai
+      - "ES_JAVA_OPTS=-Xms300m -Xmx300m"
+      - ES_CLUSTERNAME=elasticsearch
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
