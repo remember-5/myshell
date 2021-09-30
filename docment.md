@@ -24,6 +24,14 @@ docker search image_name
 docker pull image_name
 ```
 
+下载不同平台的镜像
+```shell
+docker pull redis:6.2.5 --platform=linux/arm64
+# or
+docker pull redis:6.2.5@sha256:20c41200dc57c3ae0649cbfd0a8e2a2df1099cfac42c323997a33df31c48c25a
+```
+
+
 列出镜像列表; -a, --all=false Show all images; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs
 ```
 docker images
@@ -164,6 +172,12 @@ docker save image_name > /home/save.tar
 ```
 docker load < /home/save.tar
 ```
+
+修改现有image的标签
+```shell
+docker tag image_id image_name
+```
+
 
 ##  登录registry server（login）
 

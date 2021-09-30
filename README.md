@@ -3,4 +3,6 @@
 
 不定期维护。
 
-
+# TODO
+- [ ] docker-file 操作和说明
+- [ ] 自建harbor
