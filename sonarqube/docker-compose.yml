@@ -19,9 +19,9 @@ services:
     links:
       - sonarqube-postgre
     volumes:
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+      - ./sonarqube_data:/opt/sonarqube/data
+      - ./sonarqube_extensions:/opt/sonarqube/extensions
+      - ./sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
 
   sonarqube-postgre:
     image: postgres:13.4
@@ -34,8 +34,8 @@ services:
       - POSTGRES_PASSWORD=sonar
       - POSTGRES_DB=sonarqube
     volumes:
-      - sonarqube_postgre_db:/var/lib/postgresql
-      - sonarqube_postgre_data:/var/lib/postgresql/data
+      - ./sonarqube_postgre_db:/var/lib/postgresql
+      - ./sonarqube_postgre_data:/var/lib/postgresql/data
 
 networks:
   sonarnet:
