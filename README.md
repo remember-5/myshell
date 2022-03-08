@@ -6,3 +6,14 @@
 # TODO
 - [ ] docker-file 操作和说明
 - [ ] 自建harbor
+
+maven阿里云镜像
+```xml
+<mirror>
+    <id>aliyunmaven</id>
+    <mirrorOf>*</mirrorOf>
+    <name>阿里云公共仓库</name>
+    <url>https://maven.aliyun.com/repository/public</url>
+</mirror>
+```
+
