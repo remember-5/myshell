@@ -65,7 +65,7 @@ systemctl restart docker
 # ------------------------------------
 
 # 安装docker-compose
-curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 docker-compose --version
@@ -97,9 +97,9 @@ source /etc/profile
 java -version
 
 # 安装maven
-wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
-tar zxvf apache-maven-3.8.2-bin.tar.gz
-mv apache-maven-3.8.2 /usr/local
+wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
+tar zxvf apache-maven-3.8.5-bin.tar.gz
+mv apache-maven-3.8.5 /usr/local
 cp .env/maven.sh /etc/profile.d
 source /etc/profile
 mvn -v
