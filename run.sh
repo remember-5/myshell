@@ -131,7 +131,7 @@ wget https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-run
 cp gitlab-runner-linux-amd64 /usr/local/bin/gitlab-runner
 chmod +x /usr/local/bin/gitlab-runner
 ln -s /usr/local/bin/gitlab-runner /usr/bin/gitlab-runner
-gitlab-runner install -n "gitlab-runner" -u root
+gitlab-runner install -n "gitlab-runner" --user=root --working-directory=/data/gitlab-runner
 gitlab-runner start
 
 # ------------------------------------
