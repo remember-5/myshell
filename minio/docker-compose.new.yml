@@ -10,7 +10,7 @@ services:
     command: server --console-address ':9001' /data
     environment:
       MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: admin123 # 大于等于8位
+      MINIO_ROOT_PASSWORD: admin1234 # 大于等于8位
 #    logging:
 #      options:
 #        max-size: "50M" # 最大文件上传限制
