@@ -11,4 +11,4 @@ services:
     environment:
       TZ: Asia/Shanghai
     volumes:
-      - ./data:/var/lib/postgres/data
+      - ./data:/var/lib/postgresql/data
