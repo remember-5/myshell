@@ -12,6 +12,6 @@ services:
 #      - "MYSQL_DATABASE=mydb" # 创建新的库
       - "TZ=Asia/Shanghai"
     volumes:
-      - /data/mysql/data:/var/lib/mysql
-      - /data/mysql/conf:/etc/mysql/conf.d
-      - ~/data/mysql/logs:/logs
+      - ./data:/var/lib/mysql
+      - ./conf:/etc/mysql/conf.d
+      - ./logs:/logs
