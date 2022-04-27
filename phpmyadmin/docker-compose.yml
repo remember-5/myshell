@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8091:80
+    environment:
+      - PMA_ARBITRARY=1
+#      - PMA_ABSOLUTE_URI=http://127.0.0.1/phpmyadmin # 如果需要nginx代理的话，就这样配置
