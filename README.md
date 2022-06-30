@@ -19,3 +19,13 @@ maven阿里云镜像
 
 # docker教程
 https://yeasy.gitbook.io/
+
+# 测试安装过程
+```shell
+# 直接安装
+chmod +x run.sh
+./run.sh
+# 调试安装，需要手动执行source命令
+nohup sh run.sh > nohup.out 2>&1 &
+source /etc/profile
+```

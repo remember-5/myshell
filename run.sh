@@ -6,29 +6,25 @@
 MY_PATH=$(pwd)
 echo "$MY_PATH"
 
-# 更换yum
-echo "更换yum"
+echo "====================更换yum===================="
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
 yum makecache
 
 # ------------------------------------
 
-# 停止firewall
-echo "停止firewall"
+echo "====================停止firewall===================="
 systemctl stop firewalld.service
 systemctl disable firewalld.service
 
 # ------------------------------------
 
-# 安装插件
-echo "安装插件"
+echo "====================安装插件===================="
 yum install net-tools lrzsz vim wget unzip tree -y
 
 # ------------------------------------
-# 安装docker
-echo "安装docker"
 
+echo "====================安装docker===================="
 # 卸载原有docker
 yum remove docker \
   docker-client \
@@ -50,7 +46,7 @@ sudo yum-config-manager \
     http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
-yum install -y docker-ce-20.10.6 docker-ce-cli-20.10.6 containerd.io
+yum install -y docker-ce-20.10.16 docker-ce-cli-20.10.16 containerd.io
 
 # 启动docker
 systemctl start docker
@@ -58,68 +54,77 @@ systemctl start docker
 # 配置文件
 touch /etc/docker/daemon.json
 >/etc/docker/daemon.json
-echo "{\"registry-mirrors\": [\"https://hub-mirror.c.163.com\",\"https://docker.mirrors.ustc.edu.cn\"]}" >>/etc/docker/daemon.json
+echo "{\"registry-mirrors\": [\"https://hub-mirror.c.163.com\"]}" >>/etc/docker/daemon.json
 systemctl daemon-reload
 systemctl restart docker
 
 # ------------------------------------
 
-# 安装docker-compose
-curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+echo "====================安装docker-compose===================="
+curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 docker-compose --version
 
 # ------------------------------------
 
-mkdir -p /data/package
-cd /data/package
-# 安装nginx
+echo "====================安装nginx===================="
+mkdir -p /data/package && cd /data/package
 # 安装插件
 yum -y install make gcc gcc-c++ zlib zlib-devel libtool automake openssl openssl-devel pcre pcre-devel
-wget https://nginx.org/download/nginx-1.20.1.tar.gz
-tar zxvf nginx-1.20.1.tar.gz
-cd nginx-1.20.1
+wget https://nginx.org/download/nginx-1.22.0.tar.gz
+tar zxvf nginx-1.22.0.tar.gz && cd nginx-1.22.0
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-stream
 make && make install
 # 查看nginx版本
 /usr/local/nginx/sbin/nginx -v
+mkdir -p /usr/local/nginx/conf/conf.d
+rm -rf /usr/local/nginx/conf/nginx.conf
+cp $MY_PATH/config/nginx/nginx.conf /usr/local/nginx/conf
+cp $MY_PATH/config/nginx/default.conf /usr/local/nginx/conf/conf.d/
+cp $MY_PATH/config/nginx/https.conf /usr/local/nginx/conf/conf.d/
+
 # ------------------------------------
 
-# 安装jdk
-wget https://mirrors.huaweicloud.com/java/jdk/8u202-b08/jdk-8u202-linux-x64.tar.gz
-tar zxvf jdk-8u202-linux-x64.tar.gz
-mv jdk1.8.0_202 /usr/local
+echo "====================安装jdk===================="
+cd /data/package
+wget https://d6.injdk.cn/oraclejdk/8/jdk-8u301-linux-x64.tar.gz
+tar zxvf jdk-8u301-linux-x64.tar.gz
+mv jdk1.8.0_301 /usr/local
 
 ## 创建profile.d下的文件
-cp .env/jdk.sh /etc/profile.d
+cp $MY_PATH/.env/jdk.sh /etc/profile.d
 source /etc/profile
 java -version
 
-# 安装maven
-wget https://mirror-hk.koddos.net/apache/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
-tar zxvf apache-maven-3.8.5-bin.tar.gz
-mv apache-maven-3.8.5 /usr/local
-cp .env/maven.sh /etc/profile.d
-source /etc/profile
-mvn -v
 # ------------------------------------
 
-# 安装nodejs
+echo "====================安装maven===================="
+cd /data/package
+wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz --no-check-certificate
+tar zxvf apache-maven-3.8.6-bin.tar.gz
+mv apache-maven-3.8.6 /usr/local
+cp $MY_PATH/.env/maven.sh /etc/profile.d
+source /etc/profile
+mvn -v
+/bin/cp -rf $MY_PATH/config/maven/settings.xml /usr/local/apache-maven-3.8.6/conf/
 
-wget https://nodejs.org/dist/v14.17.5/node-v14.17.5-linux-x64.tar.xz
-tar xvf node-v14.17.5-linux-x64.tar.xz
-mv node-v14.17.5-linux-x64 /usr/local
-cp .env/nodejs.sh /etc/profile.d
+# ------------------------------------
+
+echo "====================安装nodejs===================="
+wget https://nodejs.org/dist/v14.19.3/node-v14.19.3-linux-x64.tar.gz
+tar xvf node-v14.19.3-linux-x64.tar.gz
+mv node-v14.19.3-linux-x64 /usr/local
+cp $MY_PATH/.env/nodejs.sh /etc/profile.d
 source /etc/profile
 node -v
 
 npm config set registry https://registry.npm.taobao.org
-npm i yarn -g
+npm i yarn pnpm rimraf -g
 
 # ------------------------------------
 
-# gitlab-runner
+echo "====================安装gitlab-runner===================="
 # 更新git
 yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-2.noarch.rpm
 # 安装git
@@ -134,19 +139,21 @@ ln -s /usr/local/bin/gitlab-runner /usr/bin/gitlab-runner
 gitlab-runner install -n "gitlab-runner" --user=root --working-directory=/data/gitlab-runner
 gitlab-runner start
 
+echo "====================全部安装完成===================="
+
 # ------------------------------------
-# 安装mysql
-mkdir -p /data/mysql/data /data/mysql/conf /data/mysql/logs
-cd "$MY_PATH/mysql" && docker-compose up -d
-
-# 安装redis
-mkdir -p /data/redis/data /data/redis/logs
-cd "$MY_PATH/redis" && docker-compose up -d
-
-# 安装rabbitmq
-mkdir -p /data/rabbitmq
-cd "$MY_PATH/rabbitmq" && docker-compose up -d
-
-# 安装minio
-mkdir -p /data/minio/data /data/minio/config
-cd "$MY_PATH/minio" && docker-compose up -d
+## 安装mysql
+#mkdir -p /data/mysql/data /data/mysql/conf /data/mysql/logs
+#cd "$MY_PATH/mysql" && docker-compose up -d
+#
+## 安装redis
+#mkdir -p /data/redis/data /data/redis/logs
+#cd "$MY_PATH/redis" && docker-compose up -d
+#
+## 安装rabbitmq
+#mkdir -p /data/rabbitmq
+#cd "$MY_PATH/rabbitmq" && docker-compose up -d
+#
+## 安装minio
+#mkdir -p /data/minio/data /data/minio/config
+#cd "$MY_PATH/minio" && docker-compose up -d
