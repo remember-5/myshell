@@ -43,7 +43,9 @@ yum install -y yum-utils \
 # 设置docker仓库
 sudo yum-config-manager \
     --add-repo \
-    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+    https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+sudo sed -i 's/download.docker.com/mirrors.aliyun.com\/docker-ce/g' /etc/yum.repos.d/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
 yum install -y docker-ce-20.10.16 docker-ce-cli-20.10.16 containerd.io
