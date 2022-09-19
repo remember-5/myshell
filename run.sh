@@ -114,14 +114,14 @@ mvn -v
 # ------------------------------------
 
 echo "====================安装nodejs===================="
-wget https://nodejs.org/dist/v14.19.3/node-v14.19.3-linux-x64.tar.gz
-tar xvf node-v14.19.3-linux-x64.tar.gz
-mv node-v14.19.3-linux-x64 /usr/local
+wget https://nodejs.org/dist/v14.20.0/node-v14.20.0-linux-x64.tar.gz
+tar xvf node-v14.20.0-linux-x64.tar.gz
+mv node-v14.20.0-linux-x64 /usr/local
 cp $MY_PATH/.env/nodejs.sh /etc/profile.d
 source /etc/profile
 node -v
 
-npm config set registry https://registry.npm.taobao.org
+npm config set registry https://registry.npmmirror.com
 npm i yarn pnpm rimraf -g
 
 # ------------------------------------
@@ -138,6 +138,7 @@ wget https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-run
 cp gitlab-runner-linux-amd64 /usr/local/bin/gitlab-runner
 chmod +x /usr/local/bin/gitlab-runner
 ln -s /usr/local/bin/gitlab-runner /usr/bin/gitlab-runner
+mkdir -p /data/gitlab-runner
 gitlab-runner install -n "gitlab-runner" --user=root --working-directory=/data/gitlab-runner
 gitlab-runner start
 
