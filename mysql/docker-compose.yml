@@ -13,5 +13,5 @@ services:
       - "TZ=Asia/Shanghai"
     volumes:
       - ./data:/var/lib/mysql
-      - ./conf:/etc/mysql/conf.d
+      - ./conf:/etc/mysql/conf.d # 特性配置文件命名 xx.cnf aa.cnf bb.cnf cc.cnf
       - ./logs:/logs
