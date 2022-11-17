@@ -95,7 +95,11 @@ tar zxvf jdk-8u301-linux-x64.tar.gz
 mv jdk1.8.0_301 /usr/local
 
 ## 创建profile.d下的文件
-cp $MY_PATH/.env/jdk.sh /etc/profile.d
+cat > /etc/profile.d/jdk.sh << EOF
+export JAVA_HOME=/usr/local/jdk1.8.0_301
+export PATH=$JAVA_HOME/bin:$PATH
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+EOF
 source /etc/profile
 java -version
 
@@ -106,7 +110,10 @@ cd /data/package
 wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz --no-check-certificate
 tar zxvf apache-maven-3.8.6-bin.tar.gz
 mv apache-maven-3.8.6 /usr/local
-cp $MY_PATH/.env/maven.sh /etc/profile.d
+cat > /etc/profile.d/maven.sh << EOF
+export MAVEN_HOME=/usr/local/apache-maven-3.8.6
+export PATH=${MAVEN_HOME}/bin:${PATH}
+EOF
 source /etc/profile
 mvn -v
 /bin/cp -rf $MY_PATH/config/maven/settings.xml /usr/local/apache-maven-3.8.6/conf/
@@ -117,7 +124,10 @@ echo "====================安装nodejs===================="
 wget https://nodejs.org/dist/v14.20.0/node-v14.20.0-linux-x64.tar.gz
 tar xvf node-v14.20.0-linux-x64.tar.gz
 mv node-v14.20.0-linux-x64 /usr/local
-cp $MY_PATH/.env/nodejs.sh /etc/profile.d
+cat > /etc/profile.d/nodejs.sh << EOF
+export NODEJS_HOME=/usr/local/node-v14.20.0-linux-x64
+export PATH=${NODEJS_HOME}/bin:${PATH}
+EOF
 source /etc/profile
 node -v
 
