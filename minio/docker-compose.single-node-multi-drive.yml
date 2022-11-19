@@ -1,0 +1,28 @@
+version: '3'
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    restart: always
+    command: server --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: 12345678 # 大于等于8位
+      MINIO_VOLUMES: "/data{1...6}"
+    #    logging:
+    #      options:
+    #        max-size: "50M" # 最大文件上传限制
+    #        max-file: "10"
+    #      driver: json-file
+    volumes:  # 映射文件路径
+      - /data1:/data1
+      - /data2:/data2
+      - /data3:/data3
+      - /data4:/data4
+      - /data5:/data5
+      - /data6:/data6
+      - ./config:/root/.minio # 映射配置文件
+#    network_mode: bridge
