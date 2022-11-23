@@ -1,3 +1,4 @@
+#!/bin/bash
 # ------------------------------------
 # 说明，本脚本只支持centos7+ 并保证在有公网环境下使用
 # 默认安装jdk等信息
@@ -54,9 +55,15 @@ yum install -y docker-ce-20.10.16 docker-ce-cli-20.10.16 containerd.io
 systemctl start docker
 
 # 配置文件
-touch /etc/docker/daemon.json
->/etc/docker/daemon.json
-echo "{\"registry-mirrors\": [\"https://hub-mirror.c.163.com\"]}" >>/etc/docker/daemon.json
+cat > /etc/docker/daemon.json << EOF
+{
+  "registry-mirrors": [
+    "https://fgb5kwgr.mirror.aliyuncs.com",
+    "http://hub-mirror.c.163.com",
+    "https://docker.mirrors.ustc.edu.cn"
+  ]
+}
+EOF
 systemctl daemon-reload
 systemctl restart docker
 
@@ -66,7 +73,6 @@ echo "====================安装docker-compose===================="
 curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-docker-compose --version
 
 # ------------------------------------
 
@@ -93,15 +99,12 @@ cd /data/package
 wget https://d6.injdk.cn/oraclejdk/8/jdk-8u301-linux-x64.tar.gz
 tar zxvf jdk-8u301-linux-x64.tar.gz
 mv jdk1.8.0_301 /usr/local
-
 ## 创建profile.d下的文件
-cat > /etc/profile.d/jdk.sh << EOF
+cat > /etc/profile.d/jdk.sh << 'EOF'
 export JAVA_HOME=/usr/local/jdk1.8.0_301
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 EOF
-source /etc/profile
-java -version
 
 # ------------------------------------
 
@@ -110,27 +113,22 @@ cd /data/package
 wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz --no-check-certificate
 tar zxvf apache-maven-3.8.6-bin.tar.gz
 mv apache-maven-3.8.6 /usr/local
-cat > /etc/profile.d/maven.sh << EOF
+cat > /etc/profile.d/maven.sh << 'EOF'
 export MAVEN_HOME=/usr/local/apache-maven-3.8.6
 export PATH=${MAVEN_HOME}/bin:${PATH}
 EOF
-source /etc/profile
-mvn -v
 /bin/cp -rf $MY_PATH/config/maven/settings.xml /usr/local/apache-maven-3.8.6/conf/
 
 # ------------------------------------
 
 echo "====================安装nodejs===================="
 wget https://nodejs.org/dist/v14.20.0/node-v14.20.0-linux-x64.tar.gz
-tar xvf node-v14.20.0-linux-x64.tar.gz
+tar zxvf node-v14.20.0-linux-x64.tar.gz
 mv node-v14.20.0-linux-x64 /usr/local
-cat > /etc/profile.d/nodejs.sh << EOF
+cat > /etc/profile.d/nodejs.sh << 'EOF'
 export NODEJS_HOME=/usr/local/node-v14.20.0-linux-x64
 export PATH=${NODEJS_HOME}/bin:${PATH}
 EOF
-source /etc/profile
-node -v
-
 npm config set registry https://registry.npmmirror.com
 npm i yarn pnpm rimraf -g
 
@@ -153,6 +151,29 @@ gitlab-runner install -n "gitlab-runner" --user=root --working-directory=/data/g
 gitlab-runner start
 
 echo "====================全部安装完成===================="
+
+source /etc/profile
+
+echo "**************java version******************"
+java -version
+
+echo "**************maven version******************"
+mvn -v
+
+echo "**************nodejs version******************"
+node -v
+
+echo "**************git version******************"
+git --version
+
+echo "**************gitlab-runner version******************"
+gitlab-runner --version
+
+echo "**************docker version******************"
+docker --version
+
+echo "**************docker-compose version******************"
+docker-compose --version
 
 # ------------------------------------
 ## 安装mysql
