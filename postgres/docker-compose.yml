@@ -2,7 +2,7 @@ version: '3.1'
 services:
   postgresql:
     restart: always
-    image: postgres:14.2
+    image: postgres:14.6
     container_name: postgresql
     ports:
       - 5432:5432
