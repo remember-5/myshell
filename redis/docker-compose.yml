@@ -9,5 +9,5 @@ services:
     command: ["redis-server", "/etc/redis/redis.conf"]
     volumes:
       - ./data:/data
-      - ./config/redis.conf:/etc/redis/redis.conf # 配置文件，不需要可以注释
+      - ./config:/etc/redis # 在当前目录下创建 vim config/redis.conf 配置文件，并写入配置，不需要可以注释
       - ./logs:/logs
