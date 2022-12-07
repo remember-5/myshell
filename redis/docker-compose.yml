@@ -8,6 +8,6 @@ services:
       - 6379:6379
     command: ["redis-server", "/etc/redis/redis.conf"]
     volumes:
-      - /data/redis/data:/data
-      - /data/redis/conf/redis.conf:/etc/redis/redis.conf # 配置文件，不需要可以注释
-      - /data/redis/logs:/logs
+      - ./data:/data
+      - ./config/redis.conf:/etc/redis/redis.conf # 配置文件，不需要可以注释
+      - ./logs:/logs
