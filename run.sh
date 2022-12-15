@@ -49,7 +49,7 @@ sudo yum-config-manager \
 sudo sed -i 's/download.docker.com/mirrors.aliyun.com\/docker-ce/g' /etc/yum.repos.d/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
-yum install -y docker-ce-20.10.16 docker-ce-cli-20.10.16 containerd.io
+yum install -y docker-ce-20.10.21 docker-ce-cli-20.10.21 containerd.io
 
 # 启动docker
 systemctl start docker
@@ -69,7 +69,7 @@ systemctl restart docker
 # ------------------------------------
 
 echo "====================安装docker-compose===================="
-curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+curl -L "https://github.com/docker/compose/releases/download/v2.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
@@ -79,8 +79,8 @@ echo "====================安装nginx===================="
 mkdir -p /data/package && cd /data/package
 # 安装插件
 yum -y install make gcc gcc-c++ zlib zlib-devel libtool automake openssl openssl-devel pcre pcre-devel
-wget https://nginx.org/download/nginx-1.22.0.tar.gz
-tar zxvf nginx-1.22.0.tar.gz && cd nginx-1.22.0
+wget https://nginx.org/download/nginx-1.22.1.tar.gz
+tar zxvf nginx-1.22.1.tar.gz && cd nginx-1.22.1
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-stream
 make && make install
 # 查看nginx版本
@@ -95,12 +95,12 @@ cp $MY_PATH/config/nginx/https.conf /usr/local/nginx/conf/conf.d/
 
 echo "====================安装jdk===================="
 cd /data/package
-wget https://d6.injdk.cn/oraclejdk/8/jdk-8u301-linux-x64.tar.gz
-tar zxvf jdk-8u301-linux-x64.tar.gz
-mv jdk1.8.0_301 /usr/local
+wget https://d6.injdk.cn/oraclejdk/8/jdk-8u341-linux-x64.tar.gz
+tar zxvf jdk-8u341-linux-x64.tar.gz
+mv jdk1.8.0_341 /usr/local
 ## 创建profile.d下的文件
 cat > /etc/profile.d/jdk.sh << 'EOF'
-export JAVA_HOME=/usr/local/jdk1.8.0_301
+export JAVA_HOME=/usr/local/jdk1.8.0_341
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 EOF
@@ -121,11 +121,11 @@ EOF
 # ------------------------------------
 
 echo "====================安装nodejs===================="
-wget https://nodejs.org/dist/v14.20.0/node-v14.20.0-linux-x64.tar.gz
-tar zxvf node-v14.20.0-linux-x64.tar.gz
-mv node-v14.20.0-linux-x64 /usr/local
+wget https://nodejs.org/dist/v14.21.2/node-v14.21.2-linux-x64.tar.gz
+tar zxvf node-v14.21.2-linux-x64.tar.gz
+mv node-v14.21.2-linux-x64 /usr/local
 cat > /etc/profile.d/nodejs.sh << 'EOF'
-export NODEJS_HOME=/usr/local/node-v14.20.0-linux-x64
+export NODEJS_HOME=/usr/local/node-v14.21.2-linux-x64
 export PATH=${NODEJS_HOME}/bin:${PATH}
 EOF
 npm config set registry https://registry.npmmirror.com
