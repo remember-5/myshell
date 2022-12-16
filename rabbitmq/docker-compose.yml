@@ -1,15 +1,15 @@
 version: '3'
 services:
   rabbitmq:
-    image: rabbitmq:3.9.11-management
+    image: rabbitmq:3.9.27-management
     container_name: rabbitmq
     restart: always
-#    hostname: rabbitmq
+    #hostname: rabbitmq
     ports:
       - 15672:15672
       - 5672:5672
     volumes:
-      - /data/rabbitmq:/var/lib/rabbitmq
+      - ./data/rabbitmq:/var/lib/rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=root
       - RABBITMQ_DEFAULT_PASS=root
