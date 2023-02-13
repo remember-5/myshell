@@ -109,14 +109,14 @@ EOF
 
 echo "====================安装maven===================="
 cd /data/package
-wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz --no-check-certificate
-tar zxvf apache-maven-3.8.6-bin.tar.gz
-mv apache-maven-3.8.6 /usr/local
+wget https://dlcdn.apache.org/maven/maven-3/3.9.0/binaries/apache-maven-3.9.0-bin.tar.gz --no-check-certificate
+tar zxvf apache-maven-3.9.0-bin.tar.gz
+mv apache-maven-3.9.0 /usr/local
 cat > /etc/profile.d/maven.sh << 'EOF'
-export MAVEN_HOME=/usr/local/apache-maven-3.8.6
+export MAVEN_HOME=/usr/local/apache-maven-3.9.0
 export PATH=${MAVEN_HOME}/bin:${PATH}
 EOF
-/bin/cp -rf $MY_PATH/config/maven/settings.xml /usr/local/apache-maven-3.8.6/conf/
+/bin/cp -rf $MY_PATH/config/maven/settings.xml /usr/local/apache-maven-3.9.0/conf/
 
 # ------------------------------------
 
@@ -128,6 +128,7 @@ cat > /etc/profile.d/nodejs.sh << 'EOF'
 export NODEJS_HOME=/usr/local/node-v14.21.2-linux-x64
 export PATH=${NODEJS_HOME}/bin:${PATH}
 EOF
+sources /etc/profile
 npm config set registry https://registry.npmmirror.com
 npm i yarn pnpm rimraf -g
 
