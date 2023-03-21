@@ -14,6 +14,13 @@ transport.tcp.port: 9300
 http.cors.enabled: true
 # 当设置允许跨域，默认为*,表示支持所有域名，如果我们只是允许某些网站能访问，那么可以使用正则表达式。比如只允许本地地址。 /https?:\/\/localhost(:[0-9]+)?/
 http.cors.allow-origin: "*"
+# 开启认证
+http.cors.allow-headers: Authorization
+# 安全模式
+xpack.security.enabled: true
+# ssl
+xpack.security.transport.ssl.enabled: true
+
 # 表示这个节点是否可以充当主节点
 node.master: true
 # 是否充当数据节点

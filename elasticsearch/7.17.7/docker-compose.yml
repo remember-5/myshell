@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.7
+    container_name: elasticsearch
+    restart: always
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      # 9200作为Http协议，主要用于外部通讯，9300作为Tcp协议，jar之间就是通过tcp协议通讯，ES集群之间是通过9300进行通讯
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - TZ=Asia/Shanghai
+      # ES_JAVA_OPTS=-Xms512m -Xmx512m设置ES允许的jvm大小
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # 指定单节点启动
+      - discovery.type=single-node
+    volumes:
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./data:/usr/share/elasticsearch/data:rw
+      - ./logs:/usr/share/elasticsearch/logs:rw
+      - ./plugins:/usr/share/elasticsearch/plugins:rw
