@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  wvp_pro:
+    image: 648540858/wvp_pro
+    environment:
+      - WVP_HOST=10.7.254.14
+    ports:
+      - '18080:18080'
+      - '28080:80'
+      - '5060:5060'
+      - '5060:5060/udp'
+      - '30000-30010:30000-30010/udp'
+      - '30000-30010:30000-30010/tcp'
+    volumes:
+      - './wvp/logs:/opt/wvp/logs'
+      - './wvp/media/logs:/opt/media/log'
+      - './wvp/assist/logs:/opt/assist/logs'
+      - './files/IPC:/opt/media/www/record'
