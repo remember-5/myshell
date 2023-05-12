@@ -16,7 +16,7 @@ services:
       - db
 
   db:
-    image: postgres:latest
+    image: postgres:14
     restart: always
     environment:
       POSTGRES_PASSWORD: password
