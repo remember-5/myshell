@@ -2,49 +2,49 @@ version: "3"
 
 services:
   sonarqube:
-    image: sonarqube:8.9.2-community
+    image: sonarqube:9.9.1-community
     container_name: sonarqube
     restart: always
-    networks:
-      - sonarnet
-    environment:
-      - sonar.jdbc.username=sonar
-      - sonar.jdbc.password=sonar
-      - sonar.jdbc.url=jdbc:postgresql://sonarqube-postgre:5432/sonarqube
-      - sonar.search.javaOpts=-Xms256m -Xmx256m
     ports:
       - "9000:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://sonarqube-db:5432/sonarqube
+      - SONAR_JDBC_USERNAME=sonarqube
+      - SONAR_JDBC_PASSWORD=sonarqube
+      - SONAR_JDBC_MAXACTIVE=50
+      - SONAR_JDBC_MAXIDLE=5
+      - SONAR_JDBC_MINIDLE=2
     depends_on:
-      - sonarqube-postgre
-    links:
-      - sonarqube-postgre
-    volumes:
-      - ./sonarqube_data:/opt/sonarqube/data
-      - ./sonarqube_extensions:/opt/sonarqube/extensions
-      - ./sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
-
-  sonarqube-postgre:
-    image: postgres:13.4
-    container_name: sonarqube-postgre
-    restart: always
+      - sonarqube-db
     networks:
       - sonarnet
-    environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
-      - POSTGRES_DB=sonarqube
     volumes:
-      - ./sonarqube_postgre_db:/var/lib/postgresql
-      - ./sonarqube_postgre_data:/var/lib/postgresql/data
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+
+  sonarqube-db:
+    image: postgres:13.11-alpine
+    container_name: sonarqube-db
+    restart: always
+    environment:
+      - POSTGRES_USER=sonarqube
+      - POSTGRES_PASSWORD=sonarqube
+      - POSTGRES_DB=sonarqube
+    networks:
+      - sonarnet
+    volumes:
+      - sonarqube_db:/var/lib/postgresql/data
 
 networks:
   sonarnet:
     driver: bridge
 
 volumes:
-  sonarqube_bundled-plugins:
-  sonarqube_data:
+  sonarqube_conf:
   sonarqube_extensions:
-  sonarqube_postgre_db:
-  sonarqube_postgre_data:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_db:
 
