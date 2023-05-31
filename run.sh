@@ -49,7 +49,7 @@ sudo yum-config-manager \
 sudo sed -i 's/download.docker.com/mirrors.aliyun.com\/docker-ce/g' /etc/yum.repos.d/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
-yum install -y docker-ce-20.10.21 docker-ce-cli-20.10.21 containerd.io
+yum install -y docker-ce-24.0.2 docker-ce-cli-24.0.2 containerd.io
 
 # 启动docker
 systemctl start docker
@@ -68,7 +68,7 @@ systemctl restart docker
 # ------------------------------------
 
 echo "====================安装docker-compose===================="
-curl -L "https://github.com/docker/compose/releases/download/v2.14.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
