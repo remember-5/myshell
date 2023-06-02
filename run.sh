@@ -21,7 +21,7 @@ systemctl disable firewalld.service
 # ------------------------------------
 
 echo "====================安装插件===================="
-yum install net-tools lrzsz vim wget unzip tree -y
+yum install net-tools lrzsz vim wget unzip tree git -y
 
 # ------------------------------------
 
