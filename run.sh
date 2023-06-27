@@ -10,6 +10,8 @@ echo "$MY_PATH"
 echo "====================更换yum===================="
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+# epel(RHEL 7)
+curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
 yum makecache
 
 # ------------------------------------
