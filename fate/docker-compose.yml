@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  standalone_fate:
+    container_name: standalone_fate
+    #ports:
+    #  - '8080:8080'
+    #  - '9360:9360'
+    #  - '9380:9380'
+    image: 'federatedai/standalone_fate:1.10.0'
+    restart: always
+    network_mode: host
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

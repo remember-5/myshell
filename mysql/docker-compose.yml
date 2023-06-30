@@ -11,6 +11,8 @@ services:
       - "MYSQL_ROOT_PASSWORD=123456"
       #- "MYSQL_DATABASE=mydb" # 创建新的库
       - "TZ=Asia/Shanghai"
+    # 忽律表名大小写
+#    command: --lower-case-table-names=1
     volumes:
       - ./data:/var/lib/mysql
       - ./conf:/etc/mysql/conf.d # 特性配置文件命名 xx.cnf aa.cnf bb.cnf cc.cnf
