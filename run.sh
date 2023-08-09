@@ -137,7 +137,8 @@ npm i yarn pnpm rimraf -g
 
 echo "====================安装gitlab-runner===================="
 # 更新git
-yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-2.noarch.rpm
+#yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-2.noarch.rpm
+yum install https://packages.endpointdev.com/rhel/7/os/x86_64/endpoint-repo.x86_64.rpm
 # 安装git
 yum install -y git
 # 更新git

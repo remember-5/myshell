@@ -10,6 +10,7 @@ services:
     environment:
       - NB_USER=wangjiahao # 变成/home/wangjiahao
       - CHOWN_HOME=yes # 是否改变工作目录
+      - TZ=Asia/Shanghai
     working_dir: /home/wangjiahao # 指定工作目录
     volumes:
       - ./data:/home/wangjiahao # 挂载目录
