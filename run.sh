@@ -4,8 +4,19 @@
 # 默认安装jdk等信息
 # ------------------------------------
 
-MY_PATH=$(pwd)
-echo "$MY_PATH"
+RUN_PATH=$(pwd)
+# Docker Version
+DOCKER_VERSION = '24.0.2'
+# Nginx Version
+NGINX_VERSION = '1.22.1'
+# NodeJs Version
+NODE_JS_VERSION = 'v14.21.2'
+# Java SDK Version
+JDK_VERSION = '11'
+# Maven Version
+MAVEN_VERSION = '3.9.2'
+
+echo "RUN_PATH: $RUN_PATH"
 
 echo "====================更换yum===================="
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
@@ -51,7 +62,7 @@ sudo yum-config-manager \
 sudo sed -i 's/download.docker.com/mirrors.aliyun.com\/docker-ce/g' /etc/yum.repos.d/docker-ce.repo
 
 # 安装docker，如果需要指定版本，请更改脚本
-yum install -y docker-ce-24.0.2 docker-ce-cli-24.0.2 containerd.io
+yum install -y docker-ce-${DOCKER_VERSION} docker-ce-cli-${DOCKER_VERSION} containerd.io
 
 # 启动docker
 systemctl start docker
@@ -88,9 +99,9 @@ make && make install
 /usr/local/nginx/sbin/nginx -v
 mkdir -p /usr/local/nginx/conf/conf.d
 rm -rf /usr/local/nginx/conf/nginx.conf
-cp $MY_PATH/config/nginx/nginx.conf /usr/local/nginx/conf
-cp $MY_PATH/config/nginx/default.conf /usr/local/nginx/conf/conf.d/
-cp $MY_PATH/config/nginx/https.conf /usr/local/nginx/conf/conf.d/
+cp $RUN_PATH/config/nginx/nginx.conf /usr/local/nginx/conf
+cp $RUN_PATH/config/nginx/default.conf /usr/local/nginx/conf/conf.d/
+cp $RUN_PATH/config/nginx/https.conf /usr/local/nginx/conf/conf.d/
 
 # ------------------------------------
 
@@ -117,7 +128,7 @@ cat > /etc/profile.d/maven.sh << 'EOF'
 export MAVEN_HOME=/usr/local/apache-maven-3.9.2
 export PATH=${MAVEN_HOME}/bin:${PATH}
 EOF
-/bin/cp -rf $MY_PATH/config/maven/settings.xml /usr/local/apache-maven-3.9.2/conf/
+/bin/cp -rf $RUN_PATH/config/maven/settings.xml /usr/local/apache-maven-3.9.2/conf/
 
 # ------------------------------------
 
@@ -180,16 +191,16 @@ docker-compose --version
 # ------------------------------------
 ## 安装mysql
 #mkdir -p /data/mysql/data /data/mysql/conf /data/mysql/logs
-#cd "$MY_PATH/mysql" && docker-compose up -d
+#cd "$RUN_PATH/mysql" && docker-compose up -d
 #
 ## 安装redis
 #mkdir -p /data/redis/data /data/redis/logs
-#cd "$MY_PATH/redis" && docker-compose up -d
+#cd "$RUN_PATH/redis" && docker-compose up -d
 #
 ## 安装rabbitmq
 #mkdir -p /data/rabbitmq
-#cd "$MY_PATH/rabbitmq" && docker-compose up -d
+#cd "$RUN_PATH/rabbitmq" && docker-compose up -d
 #
 ## 安装minio
 #mkdir -p /data/minio/data /data/minio/config
-#cd "$MY_PATH/minio" && docker-compose up -d
+#cd "$RUN_PATH/minio" && docker-compose up -d
