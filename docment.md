@@ -235,3 +235,34 @@ systemctl restart docker
 # Dockerfile常用操作
 ## 声明
 
+
+
+在ubuntu中分段构建
+```Dockerfile
+FROM ubuntu:20.04 AS base
+RUN apt update && \
+    apt install wget -y
+
+FROM base AS download-conda
+RUN wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_23.5.2-0-Linux-x86_64.sh -O miniconda.sh && \
+    chmod +x miniconda.sh
+
+FROM download-conda AS install-conda
+RUN ./miniconda.sh -b -p /opt/miniconda && \
+    . /opt/miniconda/bin/activate && \
+    conda init && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+FROM install-conda AS dependencies
+WORKDIR /data
+COPY requirements.txt .
+RUN . /opt/miniconda/bin/activate && \
+    pip install --no-cache-dir --no-build-isolation -r requirements.txt
+
+FROM dependencies AS run
+COPY ./ .
+EXPOSE 8080
+RUN . /opt/miniconda/bin/activate && chmod +x start.sh
+CMD ["sh", "-c", ". /opt/miniconda/bin/activate && /data/start.sh && tail -f /data/nohup.out"]
+```
+

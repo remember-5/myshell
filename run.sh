@@ -71,6 +71,7 @@ systemctl start docker
 cat > /etc/docker/daemon.json << EOF
 {
   "registry-mirrors": [
+    "https://fgb5kwgr.mirror.aliyuncs.com",
     "https://registry.docker-cn.com"
   ]
 }
