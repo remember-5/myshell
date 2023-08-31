@@ -11,10 +11,6 @@ DOCKER_VERSION='24.0.2'
 NGINX_VERSION='1.22.1'
 # NodeJs Version
 NODE_JS_VERSION='v14.21.2'
-# Java SDK Version
-JDK_VERSION='11'
-# Maven Version
-MAVEN_VERSION='3.9.2'
 
 echo "RUN_PATH: $RUN_PATH"
 
@@ -81,10 +77,10 @@ systemctl restart docker
 
 # ------------------------------------
 
-echo "====================安装docker-compose===================="
-curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+#echo "====================安装docker-compose===================="
+#curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#chmod +x /usr/local/bin/docker-compose
+#ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # ------------------------------------
 
@@ -92,8 +88,8 @@ echo "====================安装nginx===================="
 mkdir -p /data/package && cd /data/package
 # 安装插件
 yum -y install make gcc gcc-c++ zlib zlib-devel libtool automake openssl openssl-devel pcre pcre-devel
-wget https://nginx.org/download/nginx-1.22.1.tar.gz
-tar zxvf nginx-1.22.1.tar.gz && cd nginx-1.22.1
+wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
+tar zxvf nginx-${NGINX_VERSION}.tar.gz && cd nginx-${NGINX_VERSION}
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-stream
 make && make install
 # 查看nginx版本
@@ -134,11 +130,11 @@ EOF
 # ------------------------------------
 
 echo "====================安装nodejs===================="
-wget https://nodejs.org/dist/v14.21.2/node-v14.21.2-linux-x64.tar.gz
-tar zxvf node-v14.21.2-linux-x64.tar.gz
-mv node-v14.21.2-linux-x64 /usr/local
+wget https://nodejs.org/dist/v14.21.2/node-${NODE_JS_VERSION}-linux-x64.tar.gz
+tar zxvf node-${NODE_JS_VERSION}-linux-x64.tar.gz
+mv node-${NODE_JS_VERSION}-linux-x64 /usr/local
 cat > /etc/profile.d/nodejs.sh << 'EOF'
-export NODEJS_HOME=/usr/local/node-v14.21.2-linux-x64
+export NODEJS_HOME=/usr/local/node-${NODE_JS_VERSION}-linux-x64
 export PATH=${NODEJS_HOME}/bin:${PATH}
 EOF
 source /etc/profile
