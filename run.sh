@@ -6,15 +6,15 @@
 
 RUN_PATH=$(pwd)
 # Docker Version
-DOCKER_VERSION = '24.0.2'
+DOCKER_VERSION='24.0.2'
 # Nginx Version
-NGINX_VERSION = '1.22.1'
+NGINX_VERSION='1.22.1'
 # NodeJs Version
-NODE_JS_VERSION = 'v14.21.2'
+NODE_JS_VERSION='v14.21.2'
 # Java SDK Version
-JDK_VERSION = '11'
+JDK_VERSION='11'
 # Maven Version
-MAVEN_VERSION = '3.9.2'
+MAVEN_VERSION='3.9.2'
 
 echo "RUN_PATH: $RUN_PATH"
 
