@@ -14,11 +14,18 @@ NODE_JS_VERSION='v14.21.2'
 
 echo "RUN_PATH: $RUN_PATH"
 
+echo "====================更换DNS===================="
+cat > /etc/resolv.conf << EOF
+nameserver 8.8.8.8
+nameserver 223.5.5.5
+EOF
+
 echo "====================更换yum===================="
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 # epel(RHEL 7)
-curl -o /etc/yum.repos.d/epel.repo https://mirrors.aliyun.com/repo/epel-7.repo
+curl -o /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
 yum makecache
 
 # ------------------------------------
@@ -77,10 +84,10 @@ systemctl restart docker
 
 # ------------------------------------
 
-#echo "====================安装docker-compose===================="
-#curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#chmod +x /usr/local/bin/docker-compose
-#ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+echo "====================安装docker-compose===================="
+curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # ------------------------------------
 
