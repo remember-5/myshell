@@ -1,0 +1,15 @@
+# Use root/example as user/password credentials
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    command: [ --auth ] # 指定需要认证，mongdb默认是无认证的
+    volumes:
+      - ./data:/data/db
