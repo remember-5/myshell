@@ -3,13 +3,16 @@ version: '3'
 
 services:
   mongo:
-    image: mongo
+    image: mongo:5.0.21
     restart: always
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    command: [ --auth ] # 指定需要认证，mongdb默认是无认证的
+      MONGO_INITDB_DATABASE: admin
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+    command: [--auth] # 指定需要认证，mongdb默认是无认证的
     volumes:
       - ./data:/data/db
+      - ./configdb:/data/configdb
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
