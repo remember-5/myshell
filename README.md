@@ -5,14 +5,26 @@
 
 # TODO
 - [x] docker-file 操作和说明
+- [x] 挂载脚本 [mount-disk.sh](mount-disk.sh)
+- [x] 代码统计脚本 [statistics-code.sh](statistics-code.sh)
 
-maven阿里云镜像
+## maven阿里云镜像
 ```xml
 <mirror>
     <id>aliyunmaven</id>
     <mirrorOf>*</mirrorOf>
     <name>阿里云公共仓库</name>
     <url>https://maven.aliyun.com/repository/public</url>
+</mirror>
+```
+
+## maven 163镜像
+```xml
+<mirror>
+  <id>nexus-163</id>
+  <mirrorOf>*</mirrorOf>
+  <name>Nexus 163</name>
+  <url>http://mirrors.163.com/maven/repository/maven-public/</url>
 </mirror>
 ```
 
