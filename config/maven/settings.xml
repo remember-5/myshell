@@ -157,6 +157,12 @@ under the License.
     </mirror>
      -->
     <mirror>
+      <id>aliyunmaven</id>
+      <mirrorOf>*</mirrorOf>
+      <name>阿里云公共仓库</name>
+      <url>https://maven.aliyun.com/repository/public</url>
+    </mirror>
+    <mirror>
       <id>nexus-163</id>
       <mirrorOf>*</mirrorOf>
       <name>Nexus 163</name>
