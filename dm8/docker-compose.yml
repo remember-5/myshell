@@ -1,0 +1,20 @@
+version: "3"
+services:
+  dm8_single:
+    container_name: dm8_test
+    image: dm8_single:dm8_20230808_rev197096_x86_rh6_64
+    restart: always
+    privileged: true
+    ports:
+      - 30236:5236
+    environment:
+      - PAGE_SIZE=16
+      - LD_LIBRARY_PATH=/opt/dmdbms/bin
+      - EXTENT_SIZE=32
+      - BLANK_PAD_MODE=1
+      - LOG_SIZE=1024
+      - UNICODE_FLAG=1
+      - LENGTH_IN_CHAR=1
+      - INSTANCE_NAME=dm8_test
+    volumes:
+      - ./data/dm8_test:/opt/dmdbms/data

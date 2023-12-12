@@ -2,6 +2,11 @@
 mkdir -p /data/redis/conf /data/redis/data /data/redis/logs
 参考 `docker-compose.yml`
 
+配置文件下载地址：https://redis.io/docs/management/config/
+
+[https://raw.githubusercontent.com/redis/redis/6.2/redis.conf](https://raw.githubusercontent.com/redis/redis/6.2/redis.conf)
+
+
 参数配置：
 1.修改保护模式protected-mode yes 默认为yes 可以跳过这一步
 Redis protected-mode属性解读
