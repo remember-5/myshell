@@ -1,0 +1,12 @@
+# 安装runner
+docker compose up -d
+# 注册runner
+docker exec -it gitlab-runner gitlab-runner register -n \
+    --url https://gitlab.com \
+    --registration-token xxxxx \
+    --description My Runner \
+    --docker-image docker:26.0.0 \
+    --executor docker \
+    --docker-privileged \
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+    --docker-volumes /root/m2:/root/.m2
