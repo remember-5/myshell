@@ -1,4 +1,8 @@
 说明
+https://docs.gitlab.com/runner/install/docker.html
+https://docs.gitlab.com/runner/register/
+https://docs.gitlab.com/runner/commands/index.html
+
 ```shell
 docker exec -it gitlab-runner gitlab-runner register -n \
     --url https://gitlab.com \  ###注册gitlab地址

@@ -1,5 +1,5 @@
 # ---- Base Node ----
-FROM maven:3.8.4-openjdk-17 AS build
+FROM maven:3.8.5-openjdk-17 AS build
 
 # copy maven setting file
 COPY settings.xml /usr/share/maven/conf/settings.xml
