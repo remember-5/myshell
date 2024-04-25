@@ -7,7 +7,7 @@ https://docs.gitlab.com/runner/commands/index.html
 docker exec -it gitlab-runner gitlab-runner register -n \
     --url https://gitlab.com \  ###注册gitlab地址
     --registration-token xxxxxx \  ###注册token
-    --description My Runner \   ###描述
+    --description "My Runner" \   ###描述
     --docker-image docker:26.0.0 \   ###docker版本，保持和运行的docker一致
     --executor docker \
     --docker-privileged \
@@ -16,7 +16,6 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --docker-volumes /root/m2:/root/.m2 \   ### maven 的缓存路径
     --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
     --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
-
 ```
 
 

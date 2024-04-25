@@ -4,7 +4,7 @@ docker compose up -d
 docker exec -it gitlab-runner gitlab-runner register -n \
     --url https://gitlab.com \
     --registration-token xxxxx \
-    --description My Runner \
+    --description "My Runner" \
     --docker-image docker:26.0.0 \
     --executor docker \
     --docker-privileged \
