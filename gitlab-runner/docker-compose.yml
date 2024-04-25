@@ -10,3 +10,6 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock' # 这个挂载是将宿主机上的docker socket挂载到了容器内，这样容器内执行的docker命令会被宿主机docker daemon最终执行。
       - '/srv/gitlab-runner/config:/etc/gitlab-runner' # 这个挂载是将gitlab-runner的配置文件挂载到宿主机上，这样我们可以通过修改宿主机上的这个配置文件对gitlab-runner进行配置
+      - '/root/.m2:/root/.m2'
+      - '/root/.npm:/root/.npm'
+      - '/root/.local:/root/.local'

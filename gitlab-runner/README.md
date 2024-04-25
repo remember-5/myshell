@@ -12,8 +12,10 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --executor docker \
     --docker-privileged \
     --docker-pull-policy if-not-present \   ###拉取方式
-    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
-    --docker-volumes /root/m2:/root/.m2
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \  ### 需要docker命令
+    --docker-volumes /root/m2:/root/.m2 \   ### maven 的缓存路径
+    --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
+    --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
 
 ```
 
