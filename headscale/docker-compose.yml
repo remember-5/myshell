@@ -1,0 +1,50 @@
+version: "3.7"
+
+services:
+  headscale:
+    image: registry.cn-hangzhou.aliyuncs.com/remember5/headscale:0.23.0-alpha12
+    restart: unless-stopped
+    container_name: headscale
+#    ports:
+#      - "8080:8080"
+#      - "9090:9090"
+    volumes:
+      # pls change [config_path] to the fullpath of the config folder just created
+      - ./config:/etc/headscale
+      - /var/run/headscale
+    command: serve
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.headscale-rtr.rule=PathPrefix(`/`) # you might want to add: && Host(`your.domain.name`)"
+      - traefik.http.services.headscale-svc.loadbalancer.server.port=8080
+
+  headscale-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/remember5/headscale-ui:latest
+    user: root
+    restart: unless-stopped
+    container_name: headscale-ui
+#    ports:
+#      - "8090:80"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.headscale-ui-rtr.rule=PathPrefix(`/web`) # you might want to add: && Host(`your.domain.name`)"
+      - traefik.http.services.headscale-ui-svc.loadbalancer.server.port=80
+
+  traefik:
+    image: registry.cn-hangzhou.aliyuncs.com/remember5/traefik:v3.0.2
+    pull_policy: always
+    restart: unless-stopped
+    container_name: traefik
+    command:
+      - --api.insecure=true # remove in production
+      - --providers.docker
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --global.sendAnonymousUsage=false
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080 # web UI (enabled with api.insecure)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/certificates:/certificates
