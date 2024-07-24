@@ -6,6 +6,8 @@ touch docker-compose.yml
 mkdir -p ./namesrv/logs/rocketmqlogs
 mkdir -p ./broker/{logs,store,conf}
 mkdir -p ./proxy/{logs,conf}
+
+# 文件夹需要777的权限
 ```
 
 

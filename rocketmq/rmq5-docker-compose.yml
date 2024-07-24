@@ -1,0 +1,77 @@
+services:
+  #Service for nameserver
+  namesrv:
+    image: apache/rocketmq:5.2.0
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    networks:
+      - rocketmq
+    volumes:
+      - ./namesrv/logs:/home/rocketmq/logs:rw
+    command: sh mqnamesrv
+
+  #Service for broker
+  broker:
+    image: apache/rocketmq:5.2.0
+    container_name: rmqbroker
+    links:
+      - namesrv
+    depends_on:
+      - namesrv
+    networks:
+      - rocketmq
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+    volumes:
+      - ./broker/logs:/home/rocketmq/logs:rw
+      - ./broker/store:/home/rocketmq/store:rw
+      - ./broker/conf/broker.conf:/home/rocketmq/rocketmq-5.2.0/conf/broker.conf
+      - ./broker/conf/plain_acl.yml:/home/rocketmq/rocketmq-5.2.0/conf/plain_acl.yml
+    command: sh mqbroker -c /home/rocketmq/rocketmq-5.2.0/conf/broker.conf
+
+  #Service for proxy
+  proxy:
+    image: apache/rocketmq:5.2.0
+    container_name: rmqproxy
+    links:
+      - namesrv
+      - broker
+    depends_on:
+      - broker
+    networks:
+      - rocketmq
+    ports:
+      - 18080:8080
+      - 18081:8081
+    restart: on-failure
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+    volumes:
+      - ./proxy/logs:/home/rocketmq/logs:rw
+      - ./proxy/conf/rmq-proxy.json:/opt/rocketmq-5.2.0/conf/rmq-proxy.json
+    command: sh mqproxy -pc /opt/rocketmq-5.2.0/conf/rmq-proxy.json
+
+  # Service for dashboard
+  rmqdashboard:
+    image: fsckzy01/rocketmq-dashboard:1.0.1
+    container_name: rmqdashboard
+    links:
+      - namesrv
+      - broker
+    depends_on:
+      - proxy
+    networks:
+      - rocketmq
+    ports:
+      - 38080:8080
+    tty: true
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=namesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false -Drocketmq.config.loginRequired=true -Drocketmq.config.accessKey=rocketmq2 -Drocketmq.config.secretKey=12345678
+networks:
+  rocketmq:
+    driver: bridge
