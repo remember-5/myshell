@@ -1,0 +1,47 @@
+services:
+  #Service for nameserver
+  rmqnamesrv:
+    image: apache/rocketmq:4.9.7
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    volumes:
+      - ./namesrv/logs:/home/rocketmq/logs
+    command: sh mqnamesrv
+
+  #Service for broker
+  rmqbroker:
+    image: apache/rocketmq:4.9.7
+    container_name: rmqbroker
+    depends_on:
+      - rmqnamesrv
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    volumes:
+      - ./broker/logs:/home/rocketmq/logs
+      - ./broker/store:/home/rocketmq/store
+      - ./broker/conf/broker.conf:/home/rocketmq/rocketmq-4.9.7/conf/broker.conf
+      - ./broker/conf/plain_acl.yml:/home/rocketmq/rocketmq-4.9.7/conf/plain_acl.yml
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.9.7/conf/broker.conf
+
+  # Service for dashboard
+  rmqdashboard:
+    image: fsckzy01/rocketmq-dashboard:1.0.1
+    container_name: rmqdashboard
+    depends_on:
+      - rmqnamesrv
+    networks:
+      - rocketmq
+    ports:
+      - 38080:8080
+    tty: true
+    environment:
+      - JAVA_OPTS=-Drocketmq.namesrv.addr=rmqnamesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false -Drocketmq.config.loginRequired=true -Drocketmq.config.accessKey=rocketmq2 -Drocketmq.config.secretKey=12345678
+
+networks:
+  rocketmq:
+    driver: bridge
