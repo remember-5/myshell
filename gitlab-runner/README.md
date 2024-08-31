@@ -11,11 +11,13 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --docker-image docker:26.0.0 \   ###docker版本，保持和运行的docker一致
     --executor docker \
     --docker-privileged \
+    --docker-allowed-pull-policies if-not-present \  ###允许拉取方式
     --docker-pull-policy if-not-present \   ###拉取方式
     --docker-volumes /var/run/docker.sock:/var/run/docker.sock \  ### 需要docker命令
-    --docker-volumes /root/m2:/root/.m2 \   ### maven 的缓存路径
+    --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
     --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
     --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
+    --docker-volumes /cache:/cache   ### 产物缓存
 ```
 
 
