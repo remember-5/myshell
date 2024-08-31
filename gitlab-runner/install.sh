@@ -2,10 +2,10 @@
 docker compose up -d
 # 注册runner
 docker exec -it gitlab-runner gitlab-runner register -n \
-    --url https://gitlab.com \
-    --registration-token xxxxx \
-    --description "My Runner" \
-    --docker-image docker:26.0.0 \
+    --url https://gitlab.remember5.top:8443 \
+    --registration-token glrt-Sw7ih-8ZLVPnUynJmTrp \
+    --description "aliyun cloud runner" \
+    --docker-image docker:26.1.4 \
     --executor docker \
     --docker-privileged \
     --docker-allowed-pull-policies if-not-present \

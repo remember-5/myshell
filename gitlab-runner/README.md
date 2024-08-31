@@ -20,12 +20,21 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --docker-volumes /root/.gitlab-runner-cache:/cache   ### 产物缓存
 ```
 
+卸载runner
+
+```shell
+gitlab-runner list
+gitlab-runner unregister --url https://gitlab.org/ --token {TOKEN}
+```
 
 
-需要在`/srv/gitlab-runner/config/config.toml` 添加
+~~需要在`/srv/gitlab-runner/config/config.toml` 添加~~
 ```
 [[runners]]
     [runners.docker]
         allowed_pull_policies = ["if-not-present"] #添加了这行
         pull_policy = ["if-not-present"]  #添加了这行
 ```
+
+
+
