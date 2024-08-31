@@ -14,4 +14,4 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --docker-volumes /root/.m2:/root/.m2 \
     --docker-volumes /root/.npm:/root/.npm \
     --docker-volumes /root/.local:/root/.local \
-    --docker-volumes /cache:/cache
+    --docker-volumes /root/.gitlab-runner-cache:/root/.gitlab-runner-cache

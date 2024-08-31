@@ -17,7 +17,7 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
     --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
     --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
-    --docker-volumes /cache:/cache   ### 产物缓存
+    --docker-volumes /root/.gitlab-runner-cache:/root/.gitlab-runner-cache   ### 产物缓存
 ```
 
 
