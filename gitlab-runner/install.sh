@@ -11,7 +11,7 @@ docker exec -it gitlab-runner gitlab-runner register -n \
     --docker-allowed-pull-policies if-not-present \
     --docker-pull-policy if-not-present \
     --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+    --docker-volumes /srv/gitlab-runner/cache:/cache \
     --docker-volumes /root/.m2:/root/.m2 \
     --docker-volumes /root/.npm:/root/.npm \
-    --docker-volumes /root/.local:/root/.local \
-    --docker-volumes /root/.gitlab-runner-cache:/root/.gitlab-runner-cache
+    --docker-volumes /root/.local:/root/.local

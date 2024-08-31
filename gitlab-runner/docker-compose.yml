@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   gitlab-runner:
     image: gitlab/gitlab-runner:v17.2.1
@@ -10,7 +8,7 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock' # 这个挂载是将宿主机上的docker socket挂载到了容器内，这样容器内执行的docker命令会被宿主机docker daemon最终执行。
       - '/srv/gitlab-runner/config:/etc/gitlab-runner' # 这个挂载是将gitlab-runner的配置文件挂载到宿主机上，这样我们可以通过修改宿主机上的这个配置文件对gitlab-runner进行配置
-      - '/root/.gitlab-runner-cache:/root/.gitlab-runner-cache' # 这个挂载是将gitlab-runner的缓存文件挂载到宿主机上，这样我们可以通过修改宿主机上的这个配置文件对gitlab-runner进行配置
+      - '/srv/gitlab-runner/cache:/cache' # 这个挂载是将gitlab-runner的缓存文件挂载到宿主机上，这样我们可以通过修改宿主机上的这个配置文件对gitlab-runner进行配置
       - '/root/.m2:/root/.m2' # 这个挂载是将maven缓存挂载到宿主机上
       - '/root/.npm:/root/.npm' # 这个挂载是将npm缓存挂载到宿主机上
       - '/root/.local:/root/.local' # 这个挂载是将python缓存挂载到宿主机上
