@@ -3,6 +3,12 @@
 
 不定期维护。
 
+# docker 镜像源
+https://github.com/cmliu/CF-Workers-docker.io
+https://dockerx.org/about/
+
+
+
 # TODO
 - [x] docker-file 操作和说明
 - [x] 挂载脚本 [mount-disk.sh](mount-disk.sh)
