@@ -1,4 +1,4 @@
-说明
+## 说明
 https://docs.gitlab.com/runner/install/docker.html
 https://docs.gitlab.com/runner/register/
 https://docs.gitlab.com/runner/commands/index.html
@@ -35,6 +35,9 @@ gitlab-runner unregister --url https://gitlab.org/ --token {TOKEN}
         allowed_pull_policies = ["if-not-present"] #添加了这行
         pull_policy = ["if-not-present"]  #添加了这行
 ```
+
+
+## gitlab-ci.yml
 
 
 
