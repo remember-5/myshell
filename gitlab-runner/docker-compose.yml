@@ -1,6 +1,6 @@
 services:
   gitlab-runner:
-    image: gitlab/gitlab-runner:v17.2.1
+    image: gitlab/gitlab-runner:v17.5.1
     container_name: gitlab-runner
     restart: always
     environment:
