@@ -1,11 +1,11 @@
 # 安装runner
 docker compose up -d
 # 注册runner
-docker exec -it gitlab-runner gitlab-runner register -n \
-    --url https://gitlab.remember5.top:8443 \
-    --registration-token glrt-Sw7ih-8ZLVPnUynJmTrp \
-    --description "aliyun cloud runner" \
-    --docker-image docker:26.1.4 \
+docker exec -it gitlab-runner gitlab-runner register \
+    --non-interactive \
+    --url https://gitlab.com \
+    --token glrt-xaxsxx \
+    --description "runner server" \
     --executor docker \
     --docker-privileged \
     --docker-allowed-pull-policies if-not-present \
