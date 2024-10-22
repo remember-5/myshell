@@ -8,6 +8,7 @@ docker exec -it gitlab-runner gitlab-runner register \
     --description "runner server" \
     --executor docker \
     --docker-privileged \
+    --docker-image docker:26.0.0 \
     --docker-allowed-pull-policies if-not-present \
     --docker-pull-policy if-not-present \
     --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
