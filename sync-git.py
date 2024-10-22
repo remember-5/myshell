@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-# 仅支持linux系统
+# 仅支持linux系统,并且保证安装过git,否则会报错, 如: yum install -y git
 
 
 # 文件路径
@@ -73,6 +73,7 @@ def sync():
     同步任务
     """
     for repo in repo_list:
+        os.chdir(file_path)
         # 检查仓库是否已经存在
         full_repo_path = os.path.join(file_path, repo["repo_name"])
         if not os.path.exists(full_repo_path):
