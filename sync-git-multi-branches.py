@@ -33,7 +33,7 @@ def set_git_credentials():
     设置 Git 凭证存储
     """
     credentials_file = os.path.expanduser("~/.git-credentials")
-     # 检查文件是否存在，如果不存在则创建
+    # 检查文件是否存在，如果不存在则创建
     if not os.path.exists(credentials_file):
         # 设置 Git 凭证为store
         subprocess.run(["git", "config", "--global", "credential.helper", "store"])
@@ -45,11 +45,22 @@ def set_git_credentials():
         except IOError:
             print("IO Error occurred when writing to the file.")
 
+def check_and_clone():
+    for repo in repo_list:
+        # 检查仓库是否已经存在
+        full_repo_path = os.path.join(file_path, repo["repo_name"])
+        if not os.path.exists(full_repo_path):
+            git_clone(repo)
+
 def git_clone(repo):
     """
     克隆git仓库
     """
+    os.chdir(file_path)
     for branch in repo["branches"]:
+        if not branch_exists(repo, branch):
+            print(f"The branch {branch} does not exist in the source repository")
+            continue
         result = subprocess.run(["git", "clone", "-b", branch, repo["public_repo"]])
         if result.returncode != 0:
             print(f"克隆 {branch} 分支时发生错误.")
@@ -57,11 +68,23 @@ def git_clone(repo):
         print(f"{branch} 分支克隆成功:", repo["repo_name"])
     return True
 
+def check_and_sync():
+    """
+    检测并同步任务
+    """
+    for repo in repo_list:
+        full_repo_path = os.path.join(file_path, repo["repo_name"])
+        os.chdir(full_repo_path)
+        git_sync(repo)
+
 def git_sync(repo):
     """
     同步git仓库
     """
     for branch in repo["branches"]:
+        if not branch_exists(repo, branch):
+            print(f"The branch {branch} does not exist in the source repository")
+            continue
         # 切换到分支
         subprocess.run(["git", "checkout", branch])
 
@@ -69,29 +92,31 @@ def git_sync(repo):
         result = subprocess.run(["git", "pull", "origin", branch])
         if result.returncode != 0:
             print(f"从源仓库拉取 {branch} 分支时发生错误.")
+
+        # 切换到新拉取的分支
+        result = subprocess.run(["git", "checkout", branch])
+        if result.returncode != 0:
+            print(f"切换到 {branch} 分支时发生错误.")
             return
+
         # 将源仓库的内容推送到目标仓库
         result = subprocess.run(["git", "push", repo["private_repo"], branch])
         if result.returncode != 0:
             print(f"将内容推送到 {repo['private_repo']} 的 {branch} 分支时发生错误.")
             return
 
-def sync():
+def branch_exists(repo, branch):
     """
-    同步任务
+    Check if the given branch exists in the remote repository
     """
-    for repo in repo_list:
-        os.chdir(file_path)
-        # 检查仓库是否已经存在
-        full_repo_path = os.path.join(file_path, repo["repo_name"])
-        if not os.path.exists(full_repo_path):
-            cloned = git_clone(repo)
-            if not cloned:
-                continue
-        os.chdir(full_repo_path)
-        git_sync(repo)
+    branches = subprocess.check_output(
+        ["git", "ls-remote", "--heads", repo["public_repo"]]).decode('utf-8').split("\n")
+
+    # check if the branch exists in the remote repository
+    return any(b.endswith(f"/{branch}") for b in branches)
 
 # 调用函数
 if __name__ == "__main__":
     set_git_credentials()
-    sync()
+    check_and_clone()
+    check_and_sync()
