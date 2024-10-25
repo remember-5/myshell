@@ -1,10 +1,7 @@
 import os
 import subprocess
 
-# 仅支持linux系统,并且保证安装过git,否则会报错, 如: yum install -y git
-
-
-# 文件路径
+# git仓库保存路径
 file_path = "/home/sync-git/"
 
 # 仓库信息
@@ -27,13 +24,11 @@ credential_list = [
     'https://admin:12345678@gitlab.org' # 仓库2证书信息
 ]
 
-
 def set_git_credentials():
     """
     设置 Git 凭证存储
     """
     credentials_file = os.path.expanduser("~/.git-credentials")
-    # 检查文件是否存在，如果不存在则创建
     if not os.path.exists(credentials_file):
         # 设置 Git 凭证为store
         subprocess.run(["git", "config", "--global", "credential.helper", "store"])
@@ -85,11 +80,8 @@ def git_sync(repo):
         if not branch_exists(repo, branch):
             print(f"The branch {branch} does not exist in the source repository")
             continue
-        # 切换到分支
         subprocess.run(["git", "checkout", branch])
-
-        # 拉取最新的源仓库内容
-        result = subprocess.run(["git", "pull", "origin", branch])
+        result = subprocess.run(["git", "pull", "--rebase", "origin", branch])
         if result.returncode != 0:
             print(f"从源仓库拉取 {branch} 分支时发生错误.")
 
