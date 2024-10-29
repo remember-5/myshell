@@ -4,20 +4,21 @@ https://docs.gitlab.com/runner/register/
 https://docs.gitlab.com/runner/commands/index.html
 
 ```shell
-docker exec -it gitlab-runner gitlab-runner register -n \
+docker exec -it gitlab-runner gitlab-runner register \
+    --non-interactive \
     --url https://gitlab.com \  ###注册gitlab地址
-    --registration-token xxxxxx \  ###注册token
+    --token xxxxxx \  ###注册token
     --description "My Runner" \   ###描述
-    --docker-image docker:26.0.0 \   ###docker版本，保持和运行的docker一致
     --executor docker \
     --docker-privileged \
+    --docker-image docker:26.0.0 \   ###docker版本，保持和运行的docker一致
     --docker-allowed-pull-policies if-not-present \  ###允许拉取方式
     --docker-pull-policy if-not-present \   ###拉取方式
     --docker-volumes /var/run/docker.sock:/var/run/docker.sock \  ### 需要docker命令
+    --docker-volumes /srv/gitlab-runner/cache:/cache \   ### 产物缓存
     --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
     --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
     --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
-    --docker-volumes /root/.gitlab-runner-cache:/cache   ### 产物缓存
 ```
 
 卸载runner
