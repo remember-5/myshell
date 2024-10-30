@@ -18,7 +18,7 @@ repo_list = [
     }
 ]
 
-# 证书信息, 格式 https://账户名:密码@域名
+# 证书信息(http方式，ssh方式请忽略), 格式 https://账户名:密码@域名
 credential_list = [
     'https://admin:12345678@gitlab.com', # 仓库1证书信息
     'https://admin:12345678@gitlab.org' # 仓库2证书信息
@@ -107,8 +107,8 @@ def branch_exists(repo, branch):
     # check if the branch exists in the remote repository
     return any(b.endswith(f"/{branch}") for b in branches)
 
-# 调用函数
+# 调用函数，预先配置ssh证书
 if __name__ == "__main__":
-    set_git_credentials()
+    # set_git_credentials()
     check_and_clone()
     check_and_sync()
