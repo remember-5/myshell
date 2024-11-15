@@ -26,7 +26,9 @@ gitlab-runner unregister --url https://gitlab.org/ --token {TOKEN}
 
 ## docker方式
 docker-compose中也要映射目录到宿主机才行
-找到volumes配置，修改为如下，分别是挂载了宿主机的docker和配置Maven的缓存，提高效率
+找到volumes配置，修改为如下，分别是挂载了宿主机的docker和配置Maven的缓存，提高效率,比如`MAVEN_OPTS: "-Dmaven.repo.local=/.m2"`
+`mvn $MAVEN_OPTS clean package -Dmaven.test.skip=true`
+
 ```shell
 docker exec -it gitlab-runner gitlab-runner register \
     --non-interactive \
@@ -129,3 +131,4 @@ touch /etc/gitlab-runner/config.toml
 - https://docs.gitlab.com/runner/install/docker.html
 - https://docs.gitlab.com/runner/register/
 - https://docs.gitlab.com/runner/commands/index.html
+- 快速开始极狐GitLab工作流 https://www.yuque.com/rangwu/gitlab/guqi8aud217uaab7
