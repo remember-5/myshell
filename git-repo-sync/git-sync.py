@@ -15,7 +15,7 @@ repo_list = [
         "public_repo": "https://gitlab.top/test/sync-git.git",
         # 私有仓库(从仓库)
         "private_repo": "https://gitlab.com/test/sync-git.git"
-    }
+    },
 ]
 
 # 证书信息(http方式，ssh方式请忽略), 格式 https://账户名:密码@域名

@@ -1,12 +1,15 @@
 # 说明
-> 日常的shell记录，有部分下载地址是官网下载，如遇到下载困难，请另行更换下载资源
+日常的shell、docker文件的记录，有部分下载地址是官网下载，如遇到下载困难，请另行更换下载资源
 
 不定期维护。
+
+
+# docker教程
+https://yeasy.gitbook.io/
 
 # docker 镜像源
 https://github.com/cmliu/CF-Workers-docker.io
 https://dockerx.org/about/
-
 
 
 # TODO
@@ -34,15 +37,5 @@ https://dockerx.org/about/
 </mirror>
 ```
 
-# docker教程
-https://yeasy.gitbook.io/
 
-# 测试安装过程
-```shell
-# 直接安装
-chmod +x run.sh
-./run.sh
-# 调试安装，需要手动执行source命令
-nohup sh run.sh > nohup.out 2>&1 &
-source /etc/profile
-```
+
