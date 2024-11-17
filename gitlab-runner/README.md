@@ -29,6 +29,25 @@ docker-compose中也要映射目录到宿主机才行
 找到volumes配置，修改为如下，分别是挂载了宿主机的docker和配置Maven的缓存，提高效率,比如`MAVEN_OPTS: "-Dmaven.repo.local=/.m2"`
 `mvn $MAVEN_OPTS clean package -Dmaven.test.skip=true`
 
+```shell    
+docker exec -it gitlab-runner gitlab-runner register \
+    --non-interactive \
+    --url https://gitlab.com \
+    --token glrt-xaxsxx \
+    --description "runner server" \
+    --executor docker \
+    --docker-privileged \
+    --docker-image docker:26.0.0 \
+    --docker-allowed-pull-policies if-not-present \
+    --docker-pull-policy if-not-present \
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+    --docker-volumes /srv/gitlab-runner/cache:/cache \
+    --docker-volumes /root/.m2:/root/.m2 \
+    --docker-volumes /root/.npm:/root/.npm \
+    --docker-volumes /root/.local:/root/.local
+```
+
+
 ```shell
 docker exec -it gitlab-runner gitlab-runner register \
     --non-interactive \
