@@ -1,5 +1,5 @@
 # 背景
-开发提交代码到gitlab后，自动出发流水线打包，并部署到k8s
+开发提交代码到gitlab后，自动触发流水线打包，并部署发布到k8s
 
 # 采用技术:
 - gitlab（v17.5.1） 采用docker安装
@@ -7,7 +7,7 @@
 - k8s(v1.20.4)
 
 ## gitlab安装
-  ```yaml
+```yaml
 version: '3.6'
 services:
   gitlab:
@@ -31,10 +31,10 @@ services:
       - './logs:/var/log/gitlab'
       - './data:/var/opt/gitlab'
     shm_size: '256m'
-  ```
+```
 
 ## gitlab runner安装
-  ```yaml
+```yaml
 services:
   gitlab-runner:
     image: gitlab/gitlab-runner:v17.5.1
@@ -49,9 +49,9 @@ services:
       - '/root/.m2:/root/.m2' # 这个挂载是将maven缓存挂载到宿主机上  
       - '/root/.npm:/root/.npm' # 这个挂载是将npm缓存挂载到宿主机上  
       - '/root/.local:/root/.local' # 这个挂载是将python缓存挂载到宿主机上
-  ```
+```
 注册gitlab-runner
-  ```shell
+```shell
   docker exec -it gitlab-runner gitlab-runner register \
   --non-interactive \
   --url https://gitlab.com \
@@ -67,10 +67,9 @@ services:
   --docker-volumes /root/.m2:/root/.m2 \
   --docker-volumes /root/.npm:/root/.npm \
   --docker-volumes /root/.local:/root/.local
-  ```
+```
 
 # CI/CD方案
-
 
 远程k8s方案选择有三种，我的需求是能远程调用k8s, 能够填充yml的变量，能够动态编译yml的部份内容，如多ports
 以下是这三个镜像的简要对比：
@@ -90,7 +89,7 @@ GPT推荐使用 `alpine/helm` 镜像。这是因为 Helm 提供了强大的模
 # 方案1:  kubectl
 这种比较适合简单的项目，因为helm有学习成本
 项目的跟路径新建一个模版  `deployment-template.yaml`
-  ```yml
+```yaml
 ---
 apiVersion: v1
 kind: Service
@@ -140,10 +139,10 @@ spec:
               memory: 300Mi
       imagePullSecrets:
         - name: swr-private # 镜像仓库的secret name
-  ```
+```
 
 `gitlab-ci.yaml`文件中如下
-  ```yaml
+```yaml
 test_deploy:
   stage: deploy
   image:
@@ -163,11 +162,11 @@ test_deploy:
   tags:
     - test
   
-  ```
+```
 
 
 根据需求发展，可能需要传入yaml中一部分变量，需要用`envsubst`来实现，只需要更改yaml
-  ```
+```yaml
 ---
 apiVersion: v1
 kind: Service
@@ -224,68 +223,67 @@ spec:
       imagePullSecrets:
         - name: swr-private # 镜像仓库的secret name
   
-  ```
+```
 
 `gitlab-ci.yaml`中更改为
 
-  ```yaml
+```yaml
 test_deploy:
   stage: deploy
   image:
     name: bitnami/kubectl:latest
     entrypoint: [""] # 必须要这段，否则报错找不到kubectl
   variables:
-  IMAGE_NAME: 'nginx' # 镜像名称
+    IMAGE_NAME: 'nginx' # 镜像名称
     IMAGE_TAG: '1.26.2-alpine'
-  DOCKERFILE_PORT: 80 # dockerfile 中暴露的端口
-  K8S_PORT: 30080 # k8s 中暴露的端口
-  K8S_NAMESPACE: 'my-namespace'  # k8s 命名空间
-  K8S_DEPLOYMENT_NAME: 'my-app'  # 项目在 k8s 中部署的名称
-  K8S_REPLICAS: 1 # k8s 部署的副本数
-  REG_URL: 'registry-harbor:5000' # harbor 镜像仓库
-  REG_USERNAME: 'admin' # harbor 账号
-  REG_PASSWORD: 'admin123456' # harbor 密码
-    script:
-      # 配置k8s上下文环境变量
-      - export KUBECONFIG=$(pwd)/deploy/kubeconfig.yaml
-      # 查看所有的环境变量
-      - printenv
-      # !!!重点是这一步!!! 会通过环境变量填充模版(包含系统、gitlab-runner等环境变量)
-      - envsubst < deployment-template.yaml > deployment.yaml
-      # 查看生成的
-      - cat deployment.yaml
-      # 使用内网环境
-      - kubectl config use-context internal
-      # 检查服务是否存在
-      - DEPLOYMENT_EXISTS=$(kubectl get deployments -n my-namespace | grep my-app || true)
-      # 如果服务存在，删除服务
-      - if [ -n "$DEPLOYMENT_EXISTS" ]; then kubectl delete -f deployment.yaml -n my-namespace; fi
-      # 应用新的部署配置
-      - kubectl apply -f deployment.yaml -n my-namespace
-    tags:
-      - test
-  
-  ```
+    DOCKERFILE_PORT: 80 # dockerfile 中暴露的端口
+    K8S_PORT: 30080 # k8s 中暴露的端口
+    K8S_NAMESPACE: 'my-namespace'  # k8s 命名空间
+    K8S_DEPLOYMENT_NAME: 'my-app'  # 项目在 k8s 中部署的名称
+    K8S_REPLICAS: 1 # k8s 部署的副本数
+    REG_URL: 'registry-harbor:5000' # harbor 镜像仓库
+    REG_USERNAME: 'admin' # harbor 账号
+    REG_PASSWORD: 'admin123456' # harbor 密码
+  script:
+    # 配置k8s上下文环境变量
+    - export KUBECONFIG=$(pwd)/deploy/kubeconfig.yaml
+    # 查看所有的环境变量
+    - printenv
+    # !!!重点是这一步!!! 会通过环境变量填充模版(包含系统、gitlab-runner等环境变量)
+    - envsubst < deployment-template.yaml > deployment.yaml
+    # 查看生成的
+    - cat deployment.yaml
+    # 使用内网环境
+    - kubectl config use-context internal
+    # 检查服务是否存在
+    - DEPLOYMENT_EXISTS=$(kubectl get deployments -n my-namespace | grep my-app || true)
+    # 如果服务存在，删除服务
+    - if [ -n "$DEPLOYMENT_EXISTS" ]; then kubectl delete -f deployment.yaml -n my-namespace; fi
+    # 应用新的部署配置
+    - kubectl apply -f deployment.yaml -n my-namespace
+tags:
+  - test
+```
 
 # 方案2: helm
 在项目路径下创建charts目录以及文件，如下所示
-  ```
+```
   ├── charts
   │   └── app
   │       ├── Chart.yaml
   │       ├── templates
   │       └── values.yaml
-  ```
+```
 
 `Chart.yaml`
-  ```
+```yaml
 apiVersion: v2
 name: my-app
 description: A Helm chart for my application
 version: 1.0.0
-  ```
+```
 变量文件 `values.yaml`
-  ```
+```yaml
 k8s:
   namespace: my-namespace
   deploymentName: my-app
@@ -306,11 +304,11 @@ k8s:
       targetPort: 443
       nodePort: 30443
   imagePullSecrets: swr-private
-  ```
+```
 
 `deployment.yaml`
 
-  ```
+```yaml
 # deployment.yaml  
 ---
 apiVersion: apps/v1
@@ -349,10 +347,10 @@ spec:
               memory: {{ .Values.k8s.container.mem }}
       imagePullSecrets:
         - name: {{ .Values.k8s.imagePullSecrets }}
-  ```
+```
 
 `service.yaml`
-  ```
+```yaml
 # service.yaml  
 ---
 apiVersion: v1
@@ -374,11 +372,11 @@ spec:
     {{- end }}
   selector:
     app: {{ .Values.k8s.deploymentName }}
-  ```
+```
 
 `gitlab-ci.yaml`
 
-  ```
+```yaml
 test_deploy:
   stage: deploy
   image:
@@ -399,11 +397,11 @@ test_deploy:
     - helm upgrade --install my-app --kube-context internal ./charts/app
   tags:
     - test
-  ```
+```
 
 
 还可以用`--set命令更改helm中的变量` values.yaml变量优先级是最低的，优先`--set`
-  ```
+```yaml
 test_deploy:
   stage: deploy
   image:
@@ -411,28 +409,28 @@ test_deploy:
     entrypoint: [""] # 必须要这段，否则报错  
   variables:
     REG_URL: 'registry-harbor:5000' # harbor 镜像仓库  
-  REG_USERNAME: 'admin' # harbor 账号  
-  REG_PASSWORD: 'admin123456' # harbor 密码  
-  # docker 配置  
-  DOCKER_IMAGE_NAME: 'nginx' # 镜像名称  
-  DOCKER_IMAGE_TAG: '1.26.2-alpine' # 镜像版本  
-  # k8s 配置  
-  K8S_NAMESPACE: 'my-namespace'  # k8s 命名空间  
-  K8S_DEPLOYMENT_NAME: 'my-app'  # 项目在 k8s 中部署的名称  
-  K8S_REPLICAS: 1 # k8s 部署的副本数  
-  K8S_CONTAINER_CPU: '1' # 容器 cpu 核数 100m 1 4 7
-  K8S_CONTAINER_MEM: '300Mi' # 容器内存 100Mi, 0.1Gi  1024Mi
-  K8S_IMAGE_PULL_SECRETS: 'swr-private'
-  # port=dockerfile的暴露端口, targetPort=svc service的暴露端口, nodePort=master的暴露端口  
-  K8S_PORT: k8s.ports[0].name=http,k8s.ports[0].port=80,k8s.ports[0].targetPort=80,k8s.ports[0].nodePort=30085,k8s.ports[1].name=https,k8s.ports[1].port=443,k8s.ports[1].targetPort=443,k8s.ports[1].nodePort=30086
-    script:
-      - export KUBECONFIG=$(pwd)/deploy/kubeconfig.yaml # 配置环境变量  
-      - >
+    REG_USERNAME: 'admin' # harbor 账号  
+    REG_PASSWORD: 'admin123456' # harbor 密码  
+    # docker 配置  
+    DOCKER_IMAGE_NAME: 'nginx' # 镜像名称  
+    DOCKER_IMAGE_TAG: '1.26.2-alpine' # 镜像版本  
+    # k8s 配置  
+    K8S_NAMESPACE: 'my-namespace'  # k8s 命名空间  
+    K8S_DEPLOYMENT_NAME: 'my-app'  # 项目在 k8s 中部署的名称  
+    K8S_REPLICAS: 1 # k8s 部署的副本数  
+    K8S_CONTAINER_CPU: '1' # 容器 cpu 核数 100m 1 4 7
+    K8S_CONTAINER_MEM: '300Mi' # 容器内存 100Mi, 0.1Gi  1024Mi
+    K8S_IMAGE_PULL_SECRETS: 'swr-private'
+    # port=dockerfile的暴露端口, targetPort=svc service的暴露端口, nodePort=master的暴露端口  
+    K8S_PORT: k8s.ports[0].name=http,k8s.ports[0].port=80,k8s.ports[0].targetPort=80,k8s.ports[0].nodePort=30085,k8s.ports[1].name=https,k8s.ports[1].port=443,k8s.ports[1].targetPort=443,k8s.ports[1].nodePort=30086
+  script:
+    - export KUBECONFIG=$(pwd)/deploy/kubeconfig.yaml # 配置环境变量  
+    - >
       if helm list -n $K8S_NAMESPACE --kube-context internal | grep $K8S_DEPLOYMENT_NAME > /dev/null; then
-      echo "Release $K8S_DEPLOYMENT_NAME exists, deleting..."
-      helm uninstall $K8S_DEPLOYMENT_NAME -n $K8S_NAMESPACE --kube-context internal
+        echo "Release $K8S_DEPLOYMENT_NAME exists, deleting..."
+        helm uninstall $K8S_DEPLOYMENT_NAME -n $K8S_NAMESPACE --kube-context internal
       fi
-      - helm upgrade --install -n $K8S_NAMESPACE $K8S_DEPLOYMENT_NAME ./charts/app --kube-context internal
+    - helm upgrade --install -n $K8S_NAMESPACE $K8S_DEPLOYMENT_NAME ./charts/app --kube-context internal
       --set k8s.namespace=$K8S_NAMESPACE
       --set k8s.deploymentName=$K8S_DEPLOYMENT_NAME
       --set k8s.replicas=$K8S_REPLICAS
@@ -442,7 +440,7 @@ test_deploy:
       --set k8s.container.mem=$K8S_CONTAINER_MEM
       --set k8s.imagePullSecrets=$K8S_IMAGE_PULL_SECRETS
       --set $K8S_PORT
-    tags:
-      - test
+  tags:
+    - test
   
-  ```
+```
