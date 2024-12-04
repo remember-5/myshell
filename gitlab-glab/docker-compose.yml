@@ -1,0 +1,9 @@
+services:
+  gitlab-glab:
+    image: gitlab/glab:v1.50.0
+    container_name: gitlab-glab
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - GITLAB_HOST=https://gitlab.com
+      - GITLAB_TOKEN=xx
