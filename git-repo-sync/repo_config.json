@@ -1,0 +1,11 @@
+{
+  "file_path": "/Users/wangjiahao/Downloads/sync-git/",
+  "repositories": [
+    {
+      "name": "sync-git",
+      "branches": ["main", "test"],
+      "public_repo": "git@gitlab.com:wangjiahao0505/sync-git.git",
+      "private_repo": "ssh://git@gitlab.remember5.top:2222/wangjiahao/sync-git.git"
+    }
+  ]
+}
