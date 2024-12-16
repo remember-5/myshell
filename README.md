@@ -3,6 +3,11 @@
 
 不定期维护。
 
+# Docker compose convertion k8s yaml
+
+使用工具 [Kompose](https://github.com/kubernetes/kompose)
+
+kubernetes文档 https://kubernetes.io/zh-cn/docs/tasks/configure-pod-container/translate-compose-kubernetes/
 
 # docker教程
 https://yeasy.gitbook.io/
