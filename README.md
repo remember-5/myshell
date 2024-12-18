@@ -164,6 +164,23 @@ docker build \
 | HTTPS_PROXY | ENV HTTPS_PROXY="http://proxy.example.com:8080/" |
 | NO_PROXY | ENV NO_PROXY="localhost,127.0.0.1,.example.com" |
 
+# FAQ
 
+## ARM下dockerfile中的mkdir不可用
+```dockerfile
+# 贝尔实验室 Spring 官方推荐镜像 JDK下载地址 https://bell-sw.com/pages/downloads/
+FROM bellsoft/liberica-openjdk-debian:17.0.11-cds
+
+# 这个mkdir无法运行
+# RUN mkdir -p /app/server
+
+# 建议使用WORKDIR,这样会自动创建
+WORKDIR /app/server
+
+ENV SERVER_PORT=8080 LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS="" TZ=Asia/Shanghai
+
+EXPOSE ${SERVER_PORT}
+
+```
 
 
