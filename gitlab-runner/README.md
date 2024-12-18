@@ -1,10 +1,9 @@
-# 说明
-gitlab-runner使用说明
-
+# Introduction
+gitlab-runner的安装、运行、卸载、配置等介绍
 
 # 安装
 
-## shell方式
+## shell安装
 
 ```shell
 # 下载gitlab-runner,根据实际情况下载
@@ -23,52 +22,13 @@ gitlab-runner list
 gitlab-runner unregister --url https://gitlab.org/ --token {TOKEN}
 ```
 
-
 ## docker方式
-docker-compose中也要映射目录到宿主机才行
-找到volumes配置，修改为如下，分别是挂载了宿主机的docker和配置Maven的缓存，提高效率,比如`MAVEN_OPTS: "-Dmaven.repo.local=/.m2"`
-`mvn $MAVEN_OPTS clean package -Dmaven.test.skip=true`
 
-```shell    
-docker exec -it gitlab-runner gitlab-runner register \
-    --non-interactive \
-    --url https://gitlab.com \
-    --token glrt-xaxsxx \
-    --description "runner server" \
-    --executor docker \
-    --docker-privileged \
-    --docker-image docker:26.0.0 \
-    --docker-allowed-pull-policies if-not-present \
-    --docker-pull-policy if-not-present \
-    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
-    --docker-volumes /srv/gitlab-runner/cache:/cache \
-    --docker-volumes /root/.m2:/root/.m2 \
-    --docker-volumes /root/.npm:/root/.npm \
-    --docker-volumes /root/.local:/root/.local
-```
-
-
-```shell
-docker exec -it gitlab-runner gitlab-runner register \
-    --non-interactive \
-    --url https://gitlab.com \  ###注册gitlab地址
-    --token xxxxxx \  ###注册token
-    --description "My Runner" \   ###描述
-    --executor docker \
-    --docker-privileged \
-    --docker-image docker:26.0.0 \   ###docker版本，保持和运行的docker一致
-    --docker-allowed-pull-policies if-not-present \  ###允许拉取方式
-    --docker-pull-policy if-not-present \   ###拉取方式，防止Runner重复拉取镜像
-    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \  ### 需要docker命令
-    --docker-volumes /srv/gitlab-runner/cache:/cache \   ### 产物缓存
-    --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
-    --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
-    --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
-```
-
+参考`docker-compose.yml` 运行 `docker-compose up -d` 即可安装
 
 ## k8s方式
-参考官方文档
+
+建议采用helm chats安装, 参考官方文档 https://artifacthub.io/packages/helm/gitlab/gitlab-runner
 
 
 # Executor 选择
@@ -107,25 +67,83 @@ Docker Machine executor｜供 CI Job 大爆发堵车时使用。
 SSH 或 Shell executor｜供 Production Deploy 或某些有较高安全性考量
 
 
+# 挂载文件
 
+shell方式可以直接在注册时选择挂载路径
 
+docker-compose中需要增加映射目录到宿主机才行
 
+找到volumes配置，修改为如下，分别是挂载了宿主机的docker和配置Maven的缓存，提高效率,比如`MAVEN_OPTS: "-Dmaven.repo.local=/.m2"`
+`mvn $MAVEN_OPTS clean package -Dmaven.test.skip=true`
 
-~~需要在`/srv/gitlab-runner/config/config.toml` 添加~~
+docker注册gitlab,并挂载目录(shell方式请自行删除--docker关键字)
+```shell    
+docker exec -it gitlab-runner gitlab-runner register \
+    --non-interactive \
+    --url https://gitlab.com \
+    --token glrt-xaxsxx \
+    --description "runner server" \
+    --executor docker \
+    --docker-privileged \
+    --docker-image docker:26.0.0 \
+    --docker-allowed-pull-policies if-not-present \
+    --docker-pull-policy if-not-present \
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+    --docker-volumes /srv/gitlab-runner/cache:/cache \
+    --docker-volumes /root/.m2:/root/.m2 \
+    --docker-volumes /root/.npm:/root/.npm \
+    --docker-volumes /root/.local:/root/.local
 ```
-[[runners]]
-    [runners.docker]
-        allowed_pull_policies = ["if-not-present"] #添加了这行
-        pull_policy = ["if-not-present"]  #添加了这行
+
+实际的命令
+```shell
+docker exec -it gitlab-runner gitlab-runner register \
+    --non-interactive \
+    --url https://gitlab.com \  ###注册gitlab地址
+    --token xxxxxx \  ###注册token
+    --description "My Runner" \   ###描述
+    --executor docker \
+    --docker-privileged \
+    --docker-image docker:26.0.0 \   ###docker版本，保持和运行的docker一致
+    --docker-allowed-pull-policies if-not-present \  ###允许拉取方式
+    --docker-pull-policy if-not-present \   ###拉取方式，防止Runner重复拉取镜像
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \  ### 需要docker命令
+    --docker-volumes /srv/gitlab-runner/cache:/cache \   ### 产物缓存
+    --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
+    --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
+    --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
 ```
 
+# Gitlab Runner 运行完成发送邮件通知
 
-# gitlab-ci.yml
+在gitlab-ci.yml中添加以下内容
 
+```shell
+image: docker:26.1.3
 
+# 本次构建的阶段：build package
+stages:
+  - generate_changelog
+  - build
+  - notice
+  
+# 全局环境变量
+variables:
+  DOCKER_IMAGE_NAME: mp-weixin
+  
+test-notice:
+  stage: notice
+  image: python:3.10-alpine
+  allow_failure: true
+  variables:
+    DOCKER_IMAGE_TAG: test
+  script:
+    - python3 deploy/send_email.py
+```
 
 # FAQ
-## Shell Executor拉去代码报错
+
+## Shell Executor拉代码报错
 ```shell
 # 更新git
 #yum install -y http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-2.noarch.rpm
@@ -143,7 +161,6 @@ ERROR: Failed to load config stat /etc/gitlab-runner/config.toml: no such file o
 docker exec -it 容器id /bin/bash 
 touch /etc/gitlab-runner/config.toml
 ```
-
 
 
 # Reference

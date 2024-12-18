@@ -1,0 +1,8 @@
+services:
+  autok3s:
+    image: cnrancher/autok3s:v0.9.3
+    container_name: autok3s
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
