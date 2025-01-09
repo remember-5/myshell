@@ -163,6 +163,12 @@ touch /etc/gitlab-runner/config.toml
 ```
 
 
+# k8s部署gitlab-runner
+部署方式按照上面的helm chart
+
+注意如果用cache，就需要pvc https://docs.gitlab.com/runner/executors/kubernetes/#volumes
+
+
 # Reference
 - https://docs.gitlab.com/runner/install/docker.html
 - https://docs.gitlab.com/runner/register/
