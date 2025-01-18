@@ -1,0 +1,7 @@
+version: '3'
+services:
+  kanboard:
+    image: kanboard/kanboard:latest
+    ports:
+      - "38080:80"
+      - "30443:443"
