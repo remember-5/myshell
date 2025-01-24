@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ee:17.8.0-ee.0
+    container_name: gitlab
+    restart: always
+    hostname: 'gitlab.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        # 这个是http的端口，还有https的端口，可以设置http_2_https
+        external_url 'https://gitlab.com:80'
+        # 自定义ssh端口
+        gitlab_rails['gitlab_shell_ssh_port'] = 22
+    ports:
+      - '80:80'
+      - '443:443'
+      - '22:22'
+    volumes:
+      - './config:/etc/gitlab'
+      - './logs:/var/log/gitlab'
+      - './data:/var/opt/gitlab'
+    shm_size: '256m'
+
