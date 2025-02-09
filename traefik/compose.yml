@@ -1,0 +1,38 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    container_name: traefik
+    command:
+      - --api=true
+      - --api.dashboard=true # 启用 dashboard
+      - --api.insecure=true # 开启 api 访问，因为我们会用认证保护它
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=traefik-net
+      - --entrypoints.http.address=:80
+      - --entrypoints.traefik.address=:8080
+    ports:
+      - 80:80 # HTTP
+      - 8080:8080 # Dashboard
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config:/etc/traefik # 配置路径
+      - ./certs:/certs # 证书目录
+      - ./htpasswd:/etc/traefik/htpasswd # htpasswd 文件挂载
+    networks:
+      - traefik-net
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik-dashboard.entrypoints=http
+      - traefik.http.routers.dashboard.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.entrypoints=web
+      - traefik.http.routers.dashboard.middlewares=auth
+      - traefik.http.middlewares.auth.basicauth.usersfile=/etc/traefik/htpasswd
+    restart: unless-stopped
+networks:
+  traefik-net:
+    name: traefik-net
+    driver: bridge

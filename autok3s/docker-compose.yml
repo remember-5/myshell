@@ -1,8 +1,37 @@
 services:
+  traefik:
+    image: traefik:v3.3
+    container_name: traefik
+    command:
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:8080"  # 改为 8080 端口
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "8080:8080"  # 改为 8080 端口映射
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /data/autok3s/htpasswd:/etc/traefik/htpasswd
+    labels:
+      - "traefik.enable=true"
+
   autok3s:
     image: cnrancher/autok3s:v0.9.3
-    container_name: autok3s
-    restart: unless-stopped
-    network_mode: host
+    init: true
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $HOME/.autok3s/:$HOME/.autok3s/
+    environment:
+      - TZ=Asia/Shanghai
+      - AUTOK3S_CONFIG=$HOME/.autok3s/
+    labels:
+      - "traefik.enable=true"
+      # AutoK3s 路由配置
+      - "traefik.http.routers.autok3s.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.autok3s.entrypoints=web"
+      - "traefik.http.routers.autok3s.middlewares=auth"
+      - "traefik.http.services.autok3s.loadbalancer.server.port=8080"
+      # Basic Auth 中间件配置
+      - "traefik.http.middlewares.auth.basicauth.usersfile=/etc/traefik/htpasswd"
