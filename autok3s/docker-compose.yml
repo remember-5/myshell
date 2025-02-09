@@ -22,10 +22,10 @@ services:
     init: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $HOME/.autok3s/:$HOME/.autok3s/
+      - /root/.autok3s/:/root/.autok3s/
     environment:
       - TZ=Asia/Shanghai
-      - AUTOK3S_CONFIG=$HOME/.autok3s/
+      - AUTOK3S_CONFIG=/root/.autok3s/
     labels:
       - "traefik.enable=true"
       # AutoK3s 路由配置
