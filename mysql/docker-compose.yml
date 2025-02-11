@@ -2,8 +2,8 @@ version: '3'
 services:
   mysql:
     restart: always
-    image: mysql:8.0.39
-    container_name: mysql8
+    image: mysql:8.4.4
+    container_name: mysql
     ports:
       - "3306:3306"
     environment:

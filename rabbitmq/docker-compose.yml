@@ -1,7 +1,6 @@
-version: '3'
 services:
   rabbitmq:
-    image: rabbitmq:3.12.14-management
+    image: rabbitmq:4.0.5-management
     container_name: rabbitmq
     restart: always
     #hostname: rabbitmq

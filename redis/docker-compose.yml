@@ -1,6 +1,6 @@
 services:
   redis:
-    image: redis:6.2.5
+    image: redis:6.2
     restart: always
     container_name: redis
     ports:
