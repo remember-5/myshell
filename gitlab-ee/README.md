@@ -26,5 +26,11 @@ docker run --rm -it \
 ```shell
 volumes:
 - "./build/public.key:/opt/gitlab/embedded/service/gitlab-rails/.license_encryption_key.pub"
+```
 
+
+查看管理员密码
+```shell
+sudo docker exec -it gitlab grep 'Password:' 
+/etc/gitlab/initial_root_password
 ```
