@@ -14,3 +14,4 @@ services:
       - '/root/.m2:/root/.m2' # 这个挂载是将maven缓存挂载到宿主机上
       - '/root/.npm:/root/.npm' # 这个挂载是将npm缓存挂载到宿主机上
       - '/root/.local:/root/.local' # 这个挂载是将python缓存挂载到宿主机上
+      - '/root/.pnpm-store:/root/.pnpm-store' # pnpm缓存

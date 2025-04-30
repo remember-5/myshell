@@ -92,7 +92,8 @@ docker exec -it gitlab-runner gitlab-runner register \
     --docker-volumes /srv/gitlab-runner/cache:/cache \
     --docker-volumes /root/.m2:/root/.m2 \
     --docker-volumes /root/.npm:/root/.npm \
-    --docker-volumes /root/.local:/root/.local
+    --docker-volumes /root/.local:/root/.local \
+    --docker-volumes /root/.pnpm-store:/root/.pnpm-store
 ```
 
 实际的命令
@@ -111,7 +112,8 @@ docker exec -it gitlab-runner gitlab-runner register \
     --docker-volumes /srv/gitlab-runner/cache:/cache \   ### 产物缓存
     --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
     --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
-    --docker-volumes /root/.local:/root/.local   ### python缓存 需要用pip install --user 安装
+    --docker-volumes /root/.local:/root/.local \   ### python缓存 需要用pip install --user 安装
+    --docker-volumes /root/.pnpm-store:/root/.pnpm-store
 ```
 
 # Gitlab Runner 运行完成发送邮件通知
