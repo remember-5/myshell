@@ -78,7 +78,7 @@ docker-compose中需要增加映射目录到宿主机才行
 
 docker注册gitlab,并挂载目录(shell方式请自行删除--docker关键字)
 
-ps: 如果是内网使用harbor，建议更改helper_image，参考 https://docs.gitlab.com/runner/configuration/advanced-configuration/
+ps: 如果是内网使用harbor，建议更改helper_image，避免出现拉不到镜像而报错，参考 https://docs.gitlab.com/runner/configuration/advanced-configuration/
 ```shell    
 docker exec -it gitlab-runner gitlab-runner register \
     --non-interactive \
