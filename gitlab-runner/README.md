@@ -113,7 +113,7 @@ docker exec -it gitlab-runner gitlab-runner register \
     --docker-volumes /root/.m2:/root/.m2 \   ### maven 的缓存路径
     --docker-volumes /root/.npm:/root/.npm \   ### npm缓存路径
     --docker-volumes /root/.local:/root/.local \   ### python缓存 需要用pip install --user 安装
-    --docker-volumes /root/.pnpm-store:/root/.pnpm-store
+    --docker-volumes /root/.pnpm-store:/root/.pnpm-store  ### pnpm缓存, 大多数情况下，pnpm都是小文件，缓存意义不大，不推荐，推荐用docker本身的缓存，dockerfile中包含构建+发布
 ```
 
 # Gitlab Runner 运行完成发送邮件通知
