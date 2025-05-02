@@ -77,6 +77,8 @@ docker-compose中需要增加映射目录到宿主机才行
 `mvn $MAVEN_OPTS clean package -Dmaven.test.skip=true`
 
 docker注册gitlab,并挂载目录(shell方式请自行删除--docker关键字)
+
+ps: 如果是内网使用harbor，建议更改helper_image，参考 https://docs.gitlab.com/runner/configuration/advanced-configuration/
 ```shell    
 docker exec -it gitlab-runner gitlab-runner register \
     --non-interactive \
@@ -176,3 +178,4 @@ touch /etc/gitlab-runner/config.toml
 - https://docs.gitlab.com/runner/register/
 - https://docs.gitlab.com/runner/commands/index.html
 - 快速开始极狐GitLab工作流 https://www.yuque.com/rangwu/gitlab/guqi8aud217uaab7
+- YAML anchors https://support.atlassian.com/bitbucket-cloud/docs/yaml-anchors/
