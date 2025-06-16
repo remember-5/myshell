@@ -3,14 +3,25 @@ services:
   minio:
     image: minio/minio:latest
     container_name: minio
+    restart: always
     ports:
       - "9000:9000"
       - "9001:9001"
-    restart: always
-    command: server --console-address ':9001' /data
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 512M
+    command: server /data --console-address :9001 --address :9000
     environment:
       MINIO_ROOT_USER: admin
       MINIO_ROOT_PASSWORD: admin1234 # 大于等于8位
+      MINIO_SERVER_URL: https://example.com
+      # MINIO_BROWSER: ${MINIO_BROWSER}
+      # MINIO_BROWSER_LOGIN_ANIMATION: ${MINIO_BROWSER_LOGIN_ANIMATION}
+      # MINIO_BROWSER_REDIRECT_URL: https://minio.remember5.top/minio/ui
+      # MINIO_BROWSER_SESSION_DURATION: ${MINIO_BROWSER_SESSION_DURATION}
+
 #    logging:
 #      options:
 #        max-size: "50M" # 最大文件上传限制
