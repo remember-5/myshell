@@ -42,6 +42,92 @@ https://min.io/docs/minio/linux/administration/identity-access-management/policy
 
 4. Anonymous Access: Buckets -> anonymous access
 
+官方默认的是有列出List Object的权限，可以精简为这样
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::yfk/public/**"
+            ]
+        }
+    ]
+}
+
+```
+
+官方的
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Action": [
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "arn:aws:s3:::yfk"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::yfk"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "s3:prefix": [
+                        "public/*"
+                    ]
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": [
+                    "*"
+                ]
+            },
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::yfk/public/**"
+            ]
+        }
+    ]
+}
+
+```
+
+
+
 5. get AK/SK: login by user -> get access key
 
 
