@@ -3,6 +3,11 @@ services:
     image: redis:6.2
     restart: always
     container_name: redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     ports:
       - 6379:6379
     command: ["redis-server", "/etc/redis/redis.conf"]

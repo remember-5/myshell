@@ -1,9 +1,13 @@
-version: '3'
 services:
   mysql:
     restart: always
     image: mysql:8.4.4
     container_name: mysql
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 512M
     ports:
       - "3306:3306"
     environment:
@@ -17,3 +21,5 @@ services:
       - ./data:/var/lib/mysql
       - ./conf:/etc/mysql/conf.d # 特性配置文件命名 xx.cnf aa.cnf bb.cnf cc.cnf
       - ./logs:/logs
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
