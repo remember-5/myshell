@@ -99,11 +99,12 @@ docker exec -it gitlab-runner gitlab-runner register \
 ```
 
 实际的命令
+gitlab-runner register  --url http://172.43.87.10:8088  --token glrt-t2_yD6HnR8ywL5Po2yQNgDp
 ```shell
 docker exec -it gitlab-runner gitlab-runner register \
     --non-interactive \
-    --url https://gitlab.com \  ###注册gitlab地址
-    --token xxxxxx \  ###注册token
+    --url http://172.43.87.10:8088 \  ###注册gitlab地址
+    --token glrt-t2_yD6HnR8ywL5Po2yQNgDp \  ###注册token
     --description "My Runner" \   ###描述
     --executor docker \
     --docker-privileged \

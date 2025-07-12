@@ -1,0 +1,41 @@
+# ================ 集群设置 ================
+# 集群名称，默认是elasticsearch
+cluster.name: "docker-cluster"
+# 节点名称，如果不设置会随机生成
+node.name: ${HOSTNAME}
+# 发现设置
+discovery.type: single-node
+
+# ================ 网络设置 ================
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+# ================ 安全设置 ================
+xpack.security.enabled: true
+
+## 传输层 SSL
+#xpack.security.transport.ssl.enabled: false
+#xpack.security.transport.ssl.verification_mode: certificate
+#xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12
+#xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
+#xpack.security.transport.ssl.supported_protocols: ["TLSv1.2", "TLSv1.3"]
+
+## HTTP 层 SSL
+#xpack.security.http.ssl.enabled: false
+#xpack.security.http.ssl.keystore.path: certs/elastic-certificates.p12
+#xpack.security.http.ssl.truststore.path: certs/elastic-certificates.p12
+#xpack.security.http.ssl.supported_protocols: ["TLSv1.2", "TLSv1.3"]
+
+# ================ 功能模块 ================
+# 地理信息下载
+# ingest.geoip.downloader.enabled: true
+
+# ================ IK 分词器配置 ================
+index.analysis.analyzer.default.type: ik_max_word
+index.analysis.tokenizer.default.type: ik_max_word
+
+
+# ================ 性能优化 ================
+bootstrap.memory_lock: false
+thread_pool.write.queue_size: 1000

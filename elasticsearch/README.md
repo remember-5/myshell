@@ -19,8 +19,8 @@ docker-compost up -d
 安装前创建文件夹,赋权,添加默认的配置文件(方便后续修改)
 
 ```shell
-mkdir -p data config logs plugins
-chmod 775 -R $(pwd)
+mkdir -p {config,data,logs,plugins,certs,ingest-pipelines,dictionaries}
+sudo chown -R 1000:1000 config data logs plugins certs ingest-pipelines dictionaries
 cd config && echo "network.host: 0.0.0.0">>elasticsearch.yml
 docker-compose up -d
 ```

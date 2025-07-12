@@ -1,0 +1,17 @@
+services:
+  firefox:
+    image: kasmweb/firefox:1.17.0
+    container_name: kasm_firefox
+    restart: always
+    shm_size: '512m' #change per your needs. eg. '512m', '1gb', '2gb'
+    ports:
+      - 6901:6901 # WebSocket访问端口（通常通过Web访问）
+    environment:
+      - VNC_PW=rwccnqhtkkszmsglxjjysrtglvjweerl  # 设置VNC密码（如果需要VNC访问）
+      - KASM_USER=admin           # 管理用户（如果启动平台）
+      - KASM_PASSWORD=czigoorbvawwcotinhpucloobhcqbakh    # 管理密码
+    volumes:
+      - kasm_data:/kasm
+
+volumes:
+  kasm_data:

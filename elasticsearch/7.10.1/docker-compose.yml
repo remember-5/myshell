@@ -1,6 +1,6 @@
 services:
   elasticsearch:
-    image: elasticsearch:7.17.7
+    image: elasticsearch:7.10.1
     container_name: elasticsearch
     restart: always
     ulimits:
@@ -16,12 +16,14 @@ services:
       - "9300:9300"
     environment:
       TZ: Asia/Shanghai
-      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+      ELASTIC_PASSWORD: "YourStrongPassword123!"  # 设置elastic用户密码
     volumes:
       - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./data:/usr/share/elasticsearch/data:rw
       - ./logs:/usr/share/elasticsearch/logs:rw
       - ./plugins:/usr/share/elasticsearch/plugins:rw
-#      - ./certs:/usr/share/elasticsearch/config/certs:rw  # 证书目录
-#      - ./ingest-pipelines:/usr/share/elasticsearch/config/ingest-pipelines:rw  # 地理处理管道
-#      - ./dictionaries:/usr/share/elasticsearch/config/dictionaries:rw  # IK自定义词典目录
+      # 挂在下面3个可能有问题，还没排查
+      #- ./certs:/usr/share/elasticsearch/config/certs:rw  # 证书目录
+      #- ./ingest-pipelines:/usr/share/elasticsearch/config/ingest-pipelines:rw  # 地理处理管道
+      #- ./dictionaries:/usr/share/elasticsearch/config/dictionaries:rw  # IK自定义词典目录
