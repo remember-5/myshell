@@ -314,6 +314,14 @@ location /signalexchange.SignalExchange/ {
 
 ```
 
+
+# FAQ
+
+## /api/user http code 502
+management回下载一个文件，国内下载很慢，需要等待
+`2025-07-14T10:19:21Z INFO [context: SYSTEM] management/server/geolocation/database.go:34: Geolocation database file GeoLite2-City_20250616.mmdb not found, file will be downloaded`
+
 # Reference
 
 - https://lala.im/9024.html
+- https://www.senra.me/nat-traversal-series-netbird-almost-perfect-tailscale-headscale-alternative-chapter-three-the-end/
