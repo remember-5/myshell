@@ -132,14 +132,14 @@ NETBIRD_MGMT_API_PORT="8012"
 # Signal service connecting port. If none is supplied
 # it will default to 10000
 # should be updated to match TLS-port of reverse proxy when netbird is running behind reverse proxy
-NETBIRD_SIGNAL_PORT="11000"
+NETBIRD_SIGNAL_PORT="10000"
 ```
 
 修改
 
 ```
 NETBIRD_MGMT_API_PORT=8012
-NETBIRD_SIGNAL_PORT=11000
+NETBIRD_SIGNAL_PORT=10000
 ```
 
 执行 `./configure.sh`
@@ -174,7 +174,7 @@ services:
     volumes:
       - netbird-signal:/var/lib/netbird
     ports:
-      - 11000:80
+      - 10000:80
   #      # port and command for Let's Encrypt validation
   #      - 443:443
   #    command: ["--letsencrypt-domain", "", "--log-file", "console"]
@@ -300,7 +300,7 @@ location ^~ /management.ManagementService/ {
 }
 
 location /signalexchange.SignalExchange/ {
-    grpc_pass grpc://10.60.57.163:11000; 
+    grpc_pass grpc://10.60.57.163:10000; 
     grpc_ssl_verify off;
     grpc_read_timeout 1d;
     grpc_send_timeout 1d;
