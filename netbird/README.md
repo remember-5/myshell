@@ -128,133 +128,18 @@ NETBIRD_RELAY_PORT=""
 # Management API connecting port. If none is supplied
 # it will default to 33073
 # should be updated to match TLS-port of reverse proxy when netbird is running behind reverse proxy
-NETBIRD_MGMT_API_PORT="8012"
+NETBIRD_MGMT_API_PORT=""
 # Signal service connecting port. If none is supplied
 # it will default to 10000
 # should be updated to match TLS-port of reverse proxy when netbird is running behind reverse proxy
-NETBIRD_SIGNAL_PORT="10000"
+NETBIRD_SIGNAL_PORT=""
 ```
 
 修改
 
-```
-NETBIRD_MGMT_API_PORT=8012
-NETBIRD_SIGNAL_PORT=10000
-```
-
 执行 `./configure.sh`
 
 修改docker-compose.yaml
-
-```docker
-services:
-  # UI dashboard
-  dashboard:
-    image: netbirdio/dashboard:v2.14.0
-    restart: unless-stopped
-    ports:
-      - 8011:80
-        #- 443:443
-    environment:
-      # Endpoints
-      - NETBIRD_MGMT_API_ENDPOINT=https://netbird.remember5.top
-      - NETBIRD_MGMT_GRPC_API_ENDPOINT=https://netbird.remember5.top
-        #volumes:
-        #- netbird-letsencrypt:/etc/letsencrypt/
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "500m"
-        max-file: "2"
-
-  # Signal
-  signal:
-    image: netbirdio/signal:0.50.3
-    restart: unless-stopped
-    volumes:
-      - netbird-signal:/var/lib/netbird
-    ports:
-      - 10000:80
-  #      # port and command for Let's Encrypt validation
-  #      - 443:443
-  #    command: ["--letsencrypt-domain", "", "--log-file", "console"]
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "500m"
-        max-file: "2"
-
-  # Relay
-  relay:
-    image: netbirdio/relay:0.50.3
-    restart: unless-stopped
-    environment:
-    - NB_LOG_LEVEL=info
-    - NB_LISTEN_ADDRESS=:33080
-    - NB_EXPOSED_ADDRESS=rels://netbird.remember5.top:33080/relay
-    ports:
-      - 33080:33080
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "500m"
-        max-file: "2"
-
-  # Management
-  management:
-    image: netbirdio/management:0.50.3
-    restart: unless-stopped
-    depends_on:
-      - dashboard
-    volumes:
-      - netbird-mgmt:/var/lib/netbird
-        #- netbird-letsencrypt:/etc/letsencrypt:ro
-      - ./management.json:/etc/netbird/management.json
-    ports:
-      - 8012:443 #API port
-  #    # command for Let's Encrypt validation without dashboard container
-  #    command: ["--letsencrypt-domain", "", "--log-file", "console"]
-    command: [
-      "--port", "443",
-      "--log-file", "console",
-      "--log-level", "info",
-      "--disable-anonymous-metrics=true",
-      "--single-account-mode-domain=netbird.remember5.top",
-      "--dns-domain=netbird.selfhosted"
-      ]
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "500m"
-        max-file: "2"
-    environment:
-      - NETBIRD_STORE_ENGINE_POSTGRES_DSN=
-      - NETBIRD_STORE_ENGINE_MYSQL_DSN=
-      
-  # Coturn
-  coturn:
-    image: coturn/coturn:4.7.0
-    restart: unless-stopped
-    #domainname: netbird.remember5.top # only needed when TLS is enabled
-    volumes:
-      - ./turnserver.conf:/etc/turnserver.conf:ro
-    #      - ./privkey.pem:/etc/coturn/private/privkey.pem:ro
-    #      - ./cert.pem:/etc/coturn/certs/cert.pem:ro
-    network_mode: host
-    command:
-      - -c /etc/turnserver.conf
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "500m"
-        max-file: "2"
-
-volumes:
-  netbird-mgmt:
-  netbird-signal:
-  netbird-letsencrypt:
-
-```
 
 # nginx代理
 
@@ -265,61 +150,174 @@ volumes:
 | /api                            | HTTP     | management:443                   |
 | /management.ManagementService/  | gRPC     | management:443                   |
 
-
 ```
-
-
-
 location / {
     proxy_pass http://10.60.57.163:8011; 
-    proxy_set_header Host $host; 
-    add_header Cache-Control no-cache; 
-    proxy_ssl_server_name on; 
 }
 
 location /api {
-    proxy_pass http://10.60.57.163:8012; 
-    proxy_set_header Host $host; 
-    add_header Cache-Control no-cache; 
-    proxy_ssl_server_name on; 
+    proxy_pass http://10.60.57.163:33073; 
 }
 
 
 location ^~ /management.ManagementService/ {
-    grpc_pass grpc://10.60.57.163:8012; 
+    grpc_pass grpc://10.60.57.163:33073; 
     
     grpc_ssl_verify off;
-    grpc_read_timeout 1d;
-    grpc_send_timeout 1d;
+    grpc_read_timeout 300s;
+    grpc_send_timeout 300s;
     grpc_socket_keepalive on;
-    grpc_set_header Host $host;
-    grpc_set_header Content-Type "application/grpc";
-    grpc_set_header X-Real-IP $remote_addr;
-    grpc_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    grpc_set_header X-Forwarded-Proto $scheme;
+    grpc_set_header X-Forwarded-For $proxy_add_x_forwarded_for; #helps getting the correct IP through npm to the server
 }
 
 location /signalexchange.SignalExchange/ {
     grpc_pass grpc://10.60.57.163:10000; 
     grpc_ssl_verify off;
-    grpc_read_timeout 1d;
-    grpc_send_timeout 1d;
+    grpc_read_timeout 300s;
+    grpc_send_timeout 300s;
     grpc_socket_keepalive on;
-    grpc_set_header Host $host;
-    grpc_set_header Content-Type "application/grpc";
-    grpc_set_header X-Real-IP $remote_addr;
-    grpc_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    grpc_set_header X-Forwarded-Proto $scheme;
+    grpc_set_header X-Forwarded-For $proxy_add_x_forwarded_for; #helps getting the correct IP through npm to the server
 }
 
 ```
 
 
+# management
+
+```json
+{
+    "Stuns": [
+        {
+            "Proto": "udp",
+            "URI": "stun:netbird.remember5.top:3478",
+            "Username": "",
+            "Password": ""
+        }
+    ],
+    "TURNConfig": {
+        "TimeBasedCredentials": false,
+        "CredentialsTTL": "12h0m0s",
+        "Secret": "secret",
+        "Turns": [
+            {
+                "Proto": "udp",
+                "URI": "turn:netbird.remember5.top:3478",
+                "Username": "self",
+                "Password": ""
+            }
+        ]
+    },
+    "Relay": {
+        "Addresses": [
+            "rels://netbird.remember5.top:443/relay"
+        ],
+        "CredentialsTTL": "24h0m0s",
+        "Secret": ""
+    },
+    "Signal": {
+        "Proto": "https",
+        "URI": "netbird.remember5.top:443",
+        "Username": "",
+        "Password": ""
+    },
+    "Datadir": "/var/lib/netbird/",
+    "DataStoreEncryptionKey": "",
+    "HttpConfig": {
+        "LetsEncryptDomain": "",
+        "CertFile": "",
+        "CertKey": "",
+        "AuthAudience": "328698961244263737",
+        "AuthIssuer": "https://netbird-dnzpyf.us1.zitadel.cloud",
+        "AuthUserIDClaim": "",
+        "AuthKeysLocation": "https://netbird-dnzpyf.us1.zitadel.cloud/oauth/v2/keys",
+        "OIDCConfigEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/.well-known/openid-configuration",
+        "IdpSignKeyRefreshEnabled": true,
+        "ExtraAuthAudience": ""
+    },
+    "IdpManagerConfig": {
+        "ManagerType": "zitadel",
+        "ClientConfig": {
+            "Issuer": "https://netbird-dnzpyf.us1.zitadel.cloud",
+            "TokenEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/oauth/v2/token",
+            "ClientID": "netbird",
+            "ClientSecret": "",
+            "GrantType": "client_credentials"
+        },
+        "ExtraConfig": {
+            "ManagementEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/management/v1"
+        },
+        "Auth0ClientCredentials": null,
+        "AzureClientCredentials": null,
+        "KeycloakClientCredentials": null,
+        "ZitadelClientCredentials": null
+    },
+    "DeviceAuthorizationFlow": {
+        "Provider": "hosted",
+        "ProviderConfig": {
+            "ClientID": "",
+            "ClientSecret": "",
+            "Domain": "netbird-dnzpyf.us1.zitadel.cloud",
+            "Audience": "",
+            "TokenEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/oauth/v2/token",
+            "DeviceAuthEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/oauth/v2/device_authorization",
+            "AuthorizationEndpoint": "",
+            "Scope": "openid",
+            "UseIDToken": false,
+            "RedirectURLs": null,
+            "DisablePromptLogin": false,
+            "LoginFlag": 0
+        }
+    },
+    "PKCEAuthorizationFlow": {
+        "ProviderConfig": {
+            "ClientID": "",
+            "ClientSecret": "",
+            "Domain": "",
+            "Audience": "",
+            "TokenEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/oauth/v2/token",
+            "DeviceAuthEndpoint": "",
+            "AuthorizationEndpoint": "https://netbird-dnzpyf.us1.zitadel.cloud/oauth/v2/authorize",
+            "Scope": "openid profile email offline_access api",
+            "UseIDToken": false,
+            "RedirectURLs": [
+                "http://localhost:53000"
+            ],
+            "DisablePromptLogin": false,
+            "LoginFlag": 0
+        }
+    },
+    "StoreConfig": {
+        "Engine": "sqlite"
+    },
+    "ReverseProxy": {
+        "TrustedHTTPProxies": [],
+        "TrustedHTTPProxiesCount": 0,
+        "TrustedPeers": [
+            "0.0.0.0/0"
+        ]
+    },
+    "DisableDefaultPolicy": false
+}
+```
+
+
+# turnserver.conf
+就是默认生成的，不做更改
+
+
 # FAQ
 
 ## /api/user http code 502
-management回下载一个文件，国内下载很慢，需要等待
+
+management回下载一个文件，国内下载很慢，需要等待, 这个是正常的, 可用`--disable-geolite-update=true` 关闭每次的更新
 `2025-07-14T10:19:21Z INFO [context: SYSTEM] management/server/geolocation/database.go:34: Geolocation database file GeoLite2-City_20250616.mmdb not found, file will be downloaded`
+
+## 单用户与多用户的区别
+
+官方默认是单用户
+
+- 单用户的话，只有管理员有控制台
+- 多用户的话，所有用户都有控制台
 
 # Reference
 
