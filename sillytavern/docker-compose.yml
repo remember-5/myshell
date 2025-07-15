@@ -1,0 +1,12 @@
+services:
+  sillytavern:
+    container_name: sillytavern
+    image: goolashe/sillytavern:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./config:/home/node/app/config"
+      - "./data:/home/node/app/data"
+      - "./plugins:/home/node/app/plugins"
+      - "./extensions:/home/node/app/public/scripts/extensions/third-party"
