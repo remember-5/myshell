@@ -15,6 +15,32 @@ https://yeasy.gitbook.io/
 # docker 镜像源
 https://github.com/cmliu/CF-Workers-docker.io
 https://dockerx.org/about/
+https://mirror.kentxxq.com/image
+
+
+```json
+{
+  "registry-mirrors": [
+    "https://docker.m.daocloud.io",
+    "https://docker-registry.nmqu.com",
+    "https://docker.1ms.run",
+    "https://docker.apiba.cn",
+    "https://docker.cattt.net",
+    "https://docker.etcd.fun",
+    "https://dockerpull.pw",
+    "https://hub.amingg.com",
+    "https://hub.mirrorify.net",
+    "https://image.cloudlayer.icu",
+    "https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com",
+    "https://proxy.vvvv.ee",
+    "https://docker.kejilion.pro",
+    "https://dockerproxy.net",
+    "https://hub2.nat.tf"
+  ]
+}
+
+
+```
 
 
 # TODO
