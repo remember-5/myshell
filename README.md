@@ -22,6 +22,7 @@ https://mirror.kentxxq.com/image
 {
   "registry-mirrors": [
     "https://docker.m.daocloud.io",
+    "https://docker.xuanyuan.me",
     "https://docker-registry.nmqu.com",
     "https://docker.1ms.run",
     "https://docker.apiba.cn",
