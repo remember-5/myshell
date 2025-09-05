@@ -134,6 +134,7 @@ SELECT
 FROM
     mysql.user u
         LEFT JOIN
+        
     mysql.audit_log_user a ON u.user = a.USER AND u.host = a.HOST
 WHERE
     a.USER IS NULL
