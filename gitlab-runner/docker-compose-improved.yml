@@ -1,0 +1,57 @@
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:v17.11.0
+    container_name: gitlab-runner
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      # 自动注册配置（可选）
+      - REGISTRATION_TOKEN=${GITLAB_REGISTRATION_TOKEN}
+      - CI_SERVER_URL=${GITLAB_URL}
+    volumes:
+      # 配置文件持久化
+      - './config:/etc/gitlab-runner'
+      # 使用命名卷代替直接挂载宿主机目录
+      - 'runner-cache:/cache'
+      - 'maven-cache:/root/.m2'
+      - 'npm-cache:/root/.npm'
+      - 'python-cache:/root/.local'
+      - 'pnpm-cache:/root/.pnpm-store'
+      # ⚠️ 安全风险：仅在必要时使用
+      # 建议改用 dind 服务或 Kaniko
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "gitlab-runner", "verify"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # 可选：使用 Docker-in-Docker 服务（更安全的替代方案）
+  # docker-dind:
+  #   image: docker:26.0.0-dind
+  #   container_name: docker-dind
+  #   privileged: true
+  #   environment:
+  #     - DOCKER_TLS_CERTDIR=/certs
+  #   volumes:
+  #     - docker-certs:/certs/client
+  #     - dind-storage:/var/lib/docker
+  #   command: ["--storage-driver=overlay2"]
+
+volumes:
+  runner-cache:
+  maven-cache:
+  npm-cache:
+  python-cache:
+  pnpm-cache:
+  # docker-certs:
+  # dind-storage:
