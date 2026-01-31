@@ -46,8 +46,8 @@ https://mirror.kentxxq.com/image
 
 # TODO
 - [x] docker-file 操作和说明
-- [x] 挂载脚本 [mount-disk.sh](mount-disk.sh)
-- [x] 代码统计脚本 [statistics-code.sh](statistics-code.sh)
+- [x] 挂载脚本 [mount-disk.sh](shell/mount-disk.sh)
+- [x] 代码统计脚本 [statistics-code.sh](shell/statistics-code.sh)
 
 ## maven阿里云镜像
 ```xml

@@ -1,0 +1,81 @@
+# GitLab CI/CD 基础模板
+# 使用方式：复制此文件到项目根目录并重命名为 .gitlab-ci.yml，根据实际需求修改
+
+# 默认镜像
+default:
+  image: docker:26.1.3
+  tags:
+    - docker
+
+# 阶段定义
+stages:
+  - build
+  - test
+  - deploy
+
+# 全局变量
+variables:
+  DOCKER_IMAGE_NAME: $CI_PROJECT_NAME
+  REGISTRY_URL: registry.example.com
+
+# 缓存配置
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .m2/
+
+# 构建 Docker 镜像
+build:
+  stage: build
+  image: docker:26.1.3
+  variables:
+    DOCKER_IMAGE_TAG: ${CI_COMMIT_SHORT_SHA}
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+    - docker push $CI_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# 多环境部署 (使用 YAML 锚点)
+.deploy_template: &deploy_template
+  stage: deploy
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  script:
+    - export KUBECONFIG=$(pwd)/deploy/kubeconfig.yaml
+    - envsubst < deploy/deployment-template.yaml > deployment.yaml
+    - kubectl config use-context $K8S_CONTEXT
+    - kubectl apply -f deployment.yaml -n $K8S_NAMESPACE
+
+# 测试环境部署
+deploy_test:
+  <<: *deploy_template
+  variables:
+    K8S_CONTEXT: test
+    K8S_NAMESPACE: test
+    DOCKER_IMAGE_TAG: ${CI_COMMIT_SHORT_SHA}
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+
+# 生产环境部署 (手动触发)
+deploy_prod:
+  <<: *deploy_template
+  variables:
+    K8S_CONTEXT: prod
+    K8S_NAMESPACE: production
+    DOCKER_IMAGE_TAG: ${CI_COMMIT_TAG}
+  rules:
+    - if: $CI_COMMIT_TAG
+  when: manual
+
+# 失败通知
+notify:
+  stage: .post
+  image: python:3.10-alpine
+  script:
+    - python deploy/send_email.py
+  when: on_failure
+  allow_failure: true
