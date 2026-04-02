@@ -1,0 +1,23 @@
+version: "3"
+services:
+  xinference:
+    image: xprobe/xinference:latest
+    restart: unless-stopped
+    container_name: xinference
+    environment:
+      - XINFERENCE_HOME=/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    ports:
+      - 9997:9997
+    volumes:
+      - ./data:/data
+    command: xinference-local -H 0.0.0.0
+
+

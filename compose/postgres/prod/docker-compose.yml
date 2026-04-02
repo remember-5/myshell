@@ -1,0 +1,102 @@
+services:
+  postgres:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: myshell/postgres-prod:18.3-bookworm
+    container_name: postgres-prod
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Shanghai
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_INITDB_ARGS=--encoding=UTF8 --locale-provider=libc --data-checksums --auth-host=scram-sha-256 --auth-local=scram-sha-256
+      # 代理配置模板
+      # - http_proxy=http://127.0.0.1:1080
+      # - https_proxy=http://127.0.0.1:1080
+      # - no_proxy=localhost,127.0.0.1
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+      - ./logs:/var/log/postgresql
+      - ./backup:/backup
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/postgresql.conf
+      - -c
+      - hba_file=/etc/postgresql/pg_hba.conf
+    shm_size: 1g
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    stop_grace_period: 2m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\" -h 127.0.0.1 -p 5432 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "5"
+
+  pgbouncer:
+    profiles:
+      - pool
+    image: edoburu/pgbouncer:v1.25.1-p0
+    container_name: pgbouncer-prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - TZ=Asia/Shanghai
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - AUTH_TYPE=scram-sha-256
+      - POOL_MODE=${PGBOUNCER_POOL_MODE:-transaction}
+      - MAX_CLIENT_CONN=${PGBOUNCER_MAX_CLIENT_CONN:-500}
+      - DEFAULT_POOL_SIZE=${PGBOUNCER_DEFAULT_POOL_SIZE:-20}
+      - MIN_POOL_SIZE=${PGBOUNCER_MIN_POOL_SIZE:-5}
+      - RESERVE_POOL_SIZE=${PGBOUNCER_RESERVE_POOL_SIZE:-5}
+      - RESERVE_POOL_TIMEOUT=5
+      - SERVER_RESET_QUERY=DISCARD ALL
+      - SERVER_CHECK_QUERY=SELECT 1
+      - IGNORE_STARTUP_PARAMETERS=extra_float_digits
+      - ADMIN_USERS=${POSTGRES_USER}
+      - STATS_USERS=${POSTGRES_USER}
+      # 代理配置模板
+      # - http_proxy=http://127.0.0.1:1080
+      # - https_proxy=http://127.0.0.1:1080
+      # - no_proxy=localhost,127.0.0.1
+    ports:
+      - "${PGBOUNCER_PORT:-6432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U \"$${DB_USER}\" -d \"$${DB_NAME}\" || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"

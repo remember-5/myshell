@@ -1,0 +1,9 @@
+[mysqld]
+# Binlog 配置
+server_id = 1
+log_bin = /logs/mysql-bin
+log_bin_index = /logs/mysql-bin.index
+binlog_row_image = FULL
+binlog_expire_logs_seconds = 1209600
+max_binlog_size = 256M
+sync_binlog = 1

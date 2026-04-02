@@ -1,0 +1,39 @@
+services:
+  mysql:
+    image: mysql:8.4.4
+    container_name: mysql
+    restart: always
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '0.5'
+    #       memory: 512M
+    env_file:
+      - .env
+    environment:
+      - "TZ=Asia/Shanghai"
+      # 代理配置模板
+      # - http_proxy=http://127.0.0.1:1080
+      # - https_proxy=http://127.0.0.1:1080
+      # - no_proxy=localhost,127.0.0.1
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/var/lib/mysql
+      # 特性配置文件命名 xx.cnf aa.cnf bb.cnf cc.cnf
+      - ./config:/etc/mysql/conf.d
+      - ./logs:/logs
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    stop_grace_period: 60s
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "3"

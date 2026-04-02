@@ -1,0 +1,31 @@
+[mysqld]
+# 基础配置
+user = mysql
+port = 3306
+bind-address = 0.0.0.0
+datadir = /var/lib/mysql
+socket = /var/run/mysqld/mysqld.sock
+pid-file = /var/run/mysqld/mysqld.pid
+
+# 字符集配置
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+init_connect = 'SET NAMES utf8mb4'
+
+# 表名大小写忽略
+lower_case_table_names = 1
+
+# 连接配置
+skip_name_resolve = 1
+max_connections = 500
+max_connect_errors = 1000
+wait_timeout = 600
+interactive_timeout = 600
+open_files_limit = 65535
+
+# 其他配置
+explicit_defaults_for_timestamp = 1
+performance_schema = ON
+
+[client]
+default-character-set = utf8mb4

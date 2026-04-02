@@ -21,22 +21,9 @@ https://mirror.kentxxq.com/image
 ```json
 {
   "registry-mirrors": [
-    "https://docker.m.daocloud.io",
-    "https://docker.xuanyuan.me",
-    "https://docker-registry.nmqu.com",
     "https://docker.1ms.run",
-    "https://docker.apiba.cn",
-    "https://docker.cattt.net",
-    "https://docker.etcd.fun",
-    "https://dockerpull.pw",
-    "https://hub.amingg.com",
-    "https://hub.mirrorify.net",
-    "https://image.cloudlayer.icu",
-    "https://2a6bf1988cb6428c877f723ec7530dbc.mirror.swr.myhuaweicloud.com",
-    "https://proxy.vvvv.ee",
-    "https://docker.kejilion.pro",
-    "https://dockerproxy.net",
-    "https://hub2.nat.tf"
+    "https://docker.xuanyuan.me",
+    "https://docker.m.daocloud.io"
   ]
 }
 
@@ -44,30 +31,6 @@ https://mirror.kentxxq.com/image
 ```
 
 
-# TODO
-- [x] docker-file 操作和说明
-- [x] 挂载脚本 [mount-disk.sh](shell/mount-disk.sh)
-- [x] 代码统计脚本 [statistics-code.sh](shell/statistics-code.sh)
-
-## maven阿里云镜像
-```xml
-<mirror>
-    <id>aliyunmaven</id>
-    <mirrorOf>*</mirrorOf>
-    <name>阿里云公共仓库</name>
-    <url>https://maven.aliyun.com/repository/public</url>
-</mirror>
-```
-
-## maven 163镜像
-```xml
-<mirror>
-  <id>nexus-163</id>
-  <mirrorOf>*</mirrorOf>
-  <name>Nexus 163</name>
-  <url>http://mirrors.163.com/maven/repository/maven-public/</url>
-</mirror>
-```
 
 # 运行增加参数
 `docker build -t --no-cache --build-arg http_proxy=http://127.0.0.1:1080 --build-arg https_proxy=http://127.0.0.1:1080 .`

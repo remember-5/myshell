@@ -2,8 +2,6 @@
 - http证书必须要存在conf/nginx.conf文件中，如果存在conf.d/xxx.conf使用到https证书，需要在nginx.conf中声明
 
 
-
-
 # Nginx 转发模式
 
 在nginx中配置proxy_pass代理转发时
