@@ -1,0 +1,28 @@
+services:
+  embyserver:
+    image: amilys/embyserver:4.9.2.6
+    container_name: embyserver
+    privileged: true
+    restart: unless-stopped
+    environment:
+      - UID=0
+      - GID=0
+      - GIDLIST=0
+      - TZ=Asia/Shanghai
+      - NVIDIA_VISIBLE_DEVICES=all
+    ports:
+      - "8096:8096"
+    volumes:
+      - /mnt/user/files/emby/config:/config
+      - /mnt/user/files/emby/data:/data
+      - /mnt/user/files/emby/strm:/strm
+    devices:
+      - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu

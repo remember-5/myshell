@@ -265,6 +265,36 @@ gitlab-runner install -n "gitlab-runner" --user=root --working-directory=/data/g
 gitlab-runner start
 ```
 
+二进制安装后注册 Runner（非交互，Docker executor）：
+
+```bash
+export GITLAB_URL="http://gitlab.com"
+export REGISTRATION_TOKEN="glrt-your-token"
+export RUNNER_NAME="binary-docker-runner"
+export RUNNER_EXECUTOR="docker"
+export DOCKER_IMAGE="docker:26.0.0"
+export RUNNER_TAGS="docker,binary"
+
+gitlab-runner register \
+    --non-interactive \
+    --url "$GITLAB_URL" \
+    --token "$REGISTRATION_TOKEN" \
+    --description "$RUNNER_NAME" \
+    --executor "$RUNNER_EXECUTOR" \
+    --docker-image "$DOCKER_IMAGE" \
+    --docker-allowed-pull-policies if-not-present \
+    --docker-pull-policy if-not-present \
+    --docker-volumes /var/run/docker.sock:/var/run/docker.sock \
+    --docker-volumes /srv/gitlab-runner/cache:/cache \
+    --docker-volumes /root/.m2:/root/.m2 \
+    --docker-volumes /root/.npm:/root/.npm \
+    --docker-volumes /root/.local:/root/.local \
+    --docker-volumes /root/.pnpm-store:/root/.pnpm-store \
+    --tag-list "$RUNNER_TAGS"
+```
+
+> 二进制安装时命令直接在宿主机执行，不需要 `docker exec`。上述命令用于 Docker Socket 模式，默认不启用 `--docker-privileged`；只有使用 Docker-in-Docker 或 CI 任务明确需要特权容器时再添加。
+
 卸载 Runner：
 ```bash
 gitlab-runner list

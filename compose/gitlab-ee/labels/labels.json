@@ -1,0 +1,197 @@
+[
+  {
+    "name": "type::feature",
+    "color": "#428BCA",
+    "description": "新功能、新需求、产品能力新增"
+  },
+  {
+    "name": "type::bug",
+    "color": "#D9534F",
+    "description": "缺陷、异常行为、线上问题"
+  },
+  {
+    "name": "type::performance",
+    "color": "#F0AD4E",
+    "description": "性能问题，如慢查询、响应慢、资源占用高"
+  },
+  {
+    "name": "type::optimization",
+    "color": "#00A65A",
+    "description": "优化现有功能、体验、流程或实现"
+  },
+  {
+    "name": "type::docs",
+    "color": "#8E44AD",
+    "description": "文档新增、修正、补充说明"
+  },
+  {
+    "name": "type::ci",
+    "color": "#3B82F6",
+    "description": "CI/CD、流水线、构建、发布脚本相关"
+  },
+  {
+    "name": "type::test",
+    "color": "#00C0EF",
+    "description": "单测、集成测试、测试环境、测试数据相关"
+  },
+  {
+    "name": "type::refactor",
+    "color": "#6B7280",
+    "description": "不改变业务行为的代码重构"
+  },
+  {
+    "name": "type::security",
+    "color": "#D81B60",
+    "description": "安全漏洞、权限、认证、敏感信息相关"
+  },
+  {
+    "name": "type::dependency",
+    "color": "#795548",
+    "description": "依赖升级、依赖替换、版本兼容"
+  },
+  {
+    "name": "type::chore",
+    "color": "#95A5A6",
+    "description": "杂项维护、配置调整、非业务改动"
+  },
+  {
+    "name": "type::question",
+    "color": "#F39C12",
+    "description": "需要进一步确认的问题或讨论"
+  },
+  {
+    "name": "priority::critical",
+    "color": "#B91C1C",
+    "description": "必须立即处理，阻塞生产或核心流程"
+  },
+  {
+    "name": "priority::high",
+    "color": "#DC2626",
+    "description": "高优先级，近期必须处理"
+  },
+  {
+    "name": "priority::medium",
+    "color": "#F59E0B",
+    "description": "正常优先级，按计划处理"
+  },
+  {
+    "name": "priority::low",
+    "color": "#10B981",
+    "description": "低优先级，可延后处理"
+  },
+  {
+    "name": "severity::blocker",
+    "color": "#7F1D1D",
+    "description": "阻塞核心流程或生产不可用"
+  },
+  {
+    "name": "severity::major",
+    "color": "#B91C1C",
+    "description": "严重缺陷，影响主要功能"
+  },
+  {
+    "name": "severity::minor",
+    "color": "#F97316",
+    "description": "一般缺陷，有影响但可规避"
+  },
+  {
+    "name": "severity::trivial",
+    "color": "#A3A3A3",
+    "description": "轻微问题或展示瑕疵"
+  },
+  {
+    "name": "status::triage",
+    "color": "#9CA3AF",
+    "description": "待分析、待确认范围和优先级"
+  },
+  {
+    "name": "status::ready",
+    "color": "#2563EB",
+    "description": "已明确，可以进入开发"
+  },
+  {
+    "name": "status::in-progress",
+    "color": "#7C3AED",
+    "description": "正在处理中"
+  },
+  {
+    "name": "status::blocked",
+    "color": "#111827",
+    "description": "被依赖、权限、环境或需求问题阻塞"
+  },
+  {
+    "name": "status::review",
+    "color": "#0EA5E9",
+    "description": "待评审或待确认"
+  },
+  {
+    "name": "status::done",
+    "color": "#16A34A",
+    "description": "已完成"
+  },
+  {
+    "name": "area::frontend",
+    "color": "#06B6D4",
+    "description": "前端页面、交互、样式相关"
+  },
+  {
+    "name": "area::backend",
+    "color": "#0F766E",
+    "description": "后端服务、业务逻辑相关"
+  },
+  {
+    "name": "area::api",
+    "color": "#4F46E5",
+    "description": "API、接口契约、请求响应相关"
+  },
+  {
+    "name": "area::database",
+    "color": "#92400E",
+    "description": "数据库、表结构、SQL、迁移相关"
+  },
+  {
+    "name": "area::auth",
+    "color": "#BE185D",
+    "description": "认证、授权、权限、账号相关"
+  },
+  {
+    "name": "area::ui",
+    "color": "#EC4899",
+    "description": "UI、视觉、组件、交互细节相关"
+  },
+  {
+    "name": "area::ci",
+    "color": "#2563EB",
+    "description": "CI/CD、流水线、构建发布相关"
+  },
+  {
+    "name": "area::docs",
+    "color": "#8E44AD",
+    "description": "文档、说明、教程、规范相关"
+  },
+  {
+    "name": "area::infra",
+    "color": "#475569",
+    "description": "基础设施、部署、服务器、网络相关"
+  },
+  {
+    "name": "area::monitoring",
+    "color": "#0891B2",
+    "description": "监控、日志、告警、可观测性相关"
+  },
+  {
+    "name": "effort::small",
+    "color": "#22C55E",
+    "description": "小工作量，通常半天内完成"
+  },
+  {
+    "name": "effort::medium",
+    "color": "#EAB308",
+    "description": "中等工作量，通常一到三天完成"
+  },
+  {
+    "name": "effort::large",
+    "color": "#EF4444",
+    "description": "较大工作量，需要拆分或排期"
+  }
+]
