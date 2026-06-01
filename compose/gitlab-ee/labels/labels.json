@@ -100,36 +100,6 @@
     "description": "轻微问题或展示瑕疵"
   },
   {
-    "name": "status::triage",
-    "color": "#9CA3AF",
-    "description": "待分析、待确认范围和优先级"
-  },
-  {
-    "name": "status::ready",
-    "color": "#2563EB",
-    "description": "已明确，可以进入开发"
-  },
-  {
-    "name": "status::in-progress",
-    "color": "#7C3AED",
-    "description": "正在处理中"
-  },
-  {
-    "name": "status::blocked",
-    "color": "#111827",
-    "description": "被依赖、权限、环境或需求问题阻塞"
-  },
-  {
-    "name": "status::review",
-    "color": "#0EA5E9",
-    "description": "待评审或待确认"
-  },
-  {
-    "name": "status::done",
-    "color": "#16A34A",
-    "description": "已完成"
-  },
-  {
     "name": "area::frontend",
     "color": "#06B6D4",
     "description": "前端页面、交互、样式相关"
