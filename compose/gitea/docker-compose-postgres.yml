@@ -4,7 +4,7 @@ networks:
 
 services:
   server:
-    image: docker.gitea.com/gitea:1.25.4
+    image: docker.gitea.com/gitea:1.26.4
     container_name: gitea
     environment:
       - USER_UID=1000
@@ -15,8 +15,8 @@ services:
       - GITEA__database__USER=gitea
       - GITEA__database__PASSWD=gitea
       # SSH 直通配置
-      - DOMAIN=192.168.0.197
-      - SSH_DOMAIN=192.168.0.197
+      - DOMAIN=localhost
+      - SSH_DOMAIN=localhost
       - SSH_PORT=2222
       - SSH_LISTEN_PORT=22
     restart: always
@@ -28,7 +28,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "3000:3000"
-      - "127.0.0.1:2222:22"  # 仅本地监听，配合 passthrough
+      - "2222:22"  # 仅本地监听
     depends_on:
       - db
 

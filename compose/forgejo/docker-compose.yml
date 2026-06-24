@@ -1,23 +1,20 @@
-version: "3"
-
 networks:
-  gitea:
+  forgejo:
     external: false
 
 services:
   server:
-    image: docker.gitea.com/gitea:1.26.4
-    container_name: gitea
+    image: codeberg.org/forgejo/forgejo:15
+    container_name: forgejo
     environment:
       - USER_UID=1000
       - USER_GID=1000
     restart: always
     networks:
-      - gitea
+      - forgejo
     volumes:
-      - ./gitea:/data
-      - /etc/timezone:/etc/timezone:ro
+      - ./forgejo:/data
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - "3000:3000"
-      - "222:22"
+      - '3000:3000'
+      - '222:22'
