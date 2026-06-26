@@ -14,11 +14,18 @@ services:
       - GITEA__database__NAME=gitea
       - GITEA__database__USER=gitea
       - GITEA__database__PASSWD=gitea
-      # SSH 直通配置
-      - DOMAIN=localhost
-      - SSH_DOMAIN=localhost
-      - SSH_PORT=2222
-      - SSH_LISTEN_PORT=22
+      # 其他配置
+      - GITEA__server__DOMAIN=gitea.example.com
+      - GITEA__server__PROTOCOL=http
+      - GITEA__server__HTTP_ADDR=0.0.0.0
+      - GITEA__server__HTTP_PORT=3000
+      - GITEA__server__DISABLE_SSH=true # 关闭ssh
+      - GITEA__service__DISABLE_REGISTRATION=true # 关闭注册
+      - GITEA__service__REQUIRE_SIGNIN_VIEW=true # 关闭匿名访问
+      - GITEA__security__COOKIE_SECURE=true # https cookie安全
+      - GITEA__openid__ENABLE_OPENID_SIGNIN=false # 关闭OPENID登录
+      - GITEA__openid__ENABLE_OPENID_SIGNUP=false # 关闭OPENID注册
+      - GITEA__api__ENABLE_SWAGGER=false # 关闭swagger
     restart: always
     networks:
       - gitea
@@ -28,7 +35,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       - "3000:3000"
-      - "2222:22"  # 仅本地监听
+      - "222:22"  # 仅本地监听
     depends_on:
       - db
 
