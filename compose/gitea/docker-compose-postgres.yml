@@ -26,6 +26,7 @@ services:
       - GITEA__openid__ENABLE_OPENID_SIGNIN=false # 关闭OPENID登录
       - GITEA__openid__ENABLE_OPENID_SIGNUP=false # 关闭OPENID注册
       - GITEA__api__ENABLE_SWAGGER=false # 关闭swagger
+      #- GITEA__actions__DEFAULT_ACTIONS_URL=self # 本地的actions仓库
     restart: always
     networks:
       - gitea
